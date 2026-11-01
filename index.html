@@ -34,6 +34,23 @@ a{color:var(--blue);text-decoration:none}
 #helpbox ul{margin:4px 0;padding-left:18px}
 #helpbox .close{float:right;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer}
 #helpbox b{color:var(--accent)}
+.card.click{cursor:pointer}
+.card.click:hover{border-color:var(--accent)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:none}
+.row .k{color:var(--dim)}
+.row .v{text-align:right;overflow-wrap:anywhere}
+.msg{border-left:2px solid var(--line);padding:4px 10px;margin:6px 0}
+.msg .who{font-size:11px;color:var(--dim)}
+.msg .text{white-space:pre-wrap}
+pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.5 ui-monospace,Consolas,monospace;margin:6px 0 0;overflow-x:auto;color:var(--text)}
+#taskoverlay{position:fixed;inset:0;background:rgba(5,10,12,.72);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;z-index:6}
+#taskoverlay.open{display:flex}
+#taskbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:680px;width:100%;padding:16px 18px}
+#taskbox h2{font-size:15px;margin:0 0 10px}
+#taskbox h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px}
+#taskbox .close{float:right;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer}
+#taskbox b{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -60,26 +77,62 @@ a{color:var(--blue);text-decoration:none}
     <li><b>P1 / P2 / P3</b> — приоритет: P1 важнее P2, P2 важнее P3.</li>
   </ul>
   <h3>Как это работает</h3>
-  <p>Это зеркало: обновляется автоматически каждые 15 минут, когда доска меняется. Наружу публикуются только заголовки, статусы, исполнители и даты — описания задач, комментарии и секреты остаются в лаборатории. Полная панель лабы доступна из локальной сети и через Tailscale.</p>
+  <p>Это зеркало: обновляется автоматически каждые 15 минут, когда доска меняется. Нажми на карточку — откроется описание, результат и комментарии. Секреты из текстов вычищаются автоматически; вложения остаются в лаборатории. Полная панель лабы доступна из локальной сети и через Tailscale.</p>
 </div></div>
+<div id="taskoverlay"><div id="taskbox"><button class="close" id="taskclose">Закрыть</button></div></div>
 <script>
 'use strict';
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})};
 fetch('data.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
   document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
+  const tasks={};
   const html=(data.boards||[]).map(b=>{
     if(b.error)return '<section class="board"><h2>'+esc(b.name)+'</h2><div class="err">'+esc(b.error)+'</div></section>';
     const cols=(b.columns||[]).map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
-      c.tasks.map(t=>'<div class="card">'+esc(t.title)+
+      c.tasks.map(t=>{tasks[t.id]=t;t._board=b.name;t._status=c.title;
+        return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
         '<div class="meta">'+(t.assignee?'<span>'+esc(t.assignee==='default'?'Авто':t.assignee)+'</span>':'<span>Лира (ночь)</span>')+
         (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
-        (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>').join('')+
+        (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
       (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
     return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+(b.columns||[]).reduce((n,c)=>n+c.tasks.length,0)+'</span></h2><div class="cols">'+cols+'</div></section>';
   }).join('');
+  window.__tasks=tasks;
   document.getElementById('content').innerHTML=html||'<div class="dim">досок нет</div>';
 }).catch(e=>{document.getElementById('content').innerHTML='<div class="err">Не удалось загрузить данные: '+esc(e.message)+'</div>'});
+const fmtFull=ts=>ts?new Date(ts*1000).toLocaleString('ru-RU'):'—';
+const resultText=t=>{const own=(t.result||'').trim();if(own)return own;const r=(t.runs||[]).find(r=>(r.summary||'').trim());return r?r.summary.trim():''};
+function closeTask(){document.getElementById('taskoverlay').classList.remove('open')}
+function openTask(id){
+  const t=(window.__tasks||{})[id];
+  if(!t)return;
+  const box=document.getElementById('taskbox');
+  document.getElementById('taskoverlay').classList.add('open');
+  const comments=(t.comments||[]).map(c=>'<div class="msg"><div class="who">'+esc(c.author||'—')+' · '+fmtFull(c.created_at)+'</div><div class="text">'+esc(c.body||'')+'</div></div>').join('')||'<div class="dim">комментариев нет</div>';
+  box.innerHTML=
+    '<button class="close" id="taskclose">Закрыть</button>'+
+    '<h2>'+esc(t.title||'—')+'</h2>'+
+    '<div class="row"><span class="k">Доска</span><span class="v">'+esc(t._board||'—')+'</span></div>'+
+    '<div class="row"><span class="k">Статус</span><span class="v">'+esc(t._status||t.status||'—')+'</span></div>'+
+    '<div class="row"><span class="k">Исполнитель</span><span class="v">'+esc(t.assignee?(t.assignee==='default'?'Авто':t.assignee):'Лира (ночь)')+'</span></div>'+
+    '<div class="row"><span class="k">Приоритет</span><span class="v">'+(t.priority?'P'+esc(t.priority):'—')+'</span></div>'+
+    '<div class="row"><span class="k">Кто завёл</span><span class="v">'+esc(t.created_by||'—')+'</span></div>'+
+    '<div class="row"><span class="k">Создана</span><span class="v">'+fmtFull(t.created_at)+'</span></div>'+
+    (t.completed_at?'<div class="row"><span class="k">Завершена</span><span class="v">'+fmtFull(t.completed_at)+'</span></div>':'')+
+    (t.block_kind?'<div class="row"><span class="k">Блокировка</span><span class="v">'+esc(t.block_kind)+'</span></div>':'')+
+    '<h3>Описание</h3><pre class="taskbody">'+esc(t.body||'—')+'</pre>'+
+    (resultText(t)?'<h3>Результат</h3><pre class="taskbody">'+esc(resultText(t))+'</pre>':'')+
+    '<h3>Комментарии</h3>'+comments;
+  document.getElementById('taskclose').onclick=closeTask;
+}
+document.getElementById('content').addEventListener('click',e=>{
+  const card=e.target.closest('.card.click');
+  if(card&&card.dataset.id)openTask(card.dataset.id);
+});
+document.getElementById('taskoverlay').addEventListener('click',e=>{if(e.target.id==='taskoverlay')closeTask()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTask()});
+if(window.Telegram&&window.Telegram.WebApp){try{window.Telegram.WebApp.ready();window.Telegram.WebApp.expand()}catch(e){}}
 document.getElementById('helpbtn').onclick=()=>document.getElementById('overlay').classList.add('open');
 document.getElementById('helpclose').onclick=()=>document.getElementById('overlay').classList.remove('open');
 document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')document.getElementById('overlay').classList.remove('open')};
