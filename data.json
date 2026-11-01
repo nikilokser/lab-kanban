@@ -1,5 +1,5 @@
 {
- "generated_at": 1793562748,
+ "generated_at": 1793562945,
  "boards": [
   {
    "slug": "braille-printer",
@@ -274,14 +274,6 @@
        "completed_at": null
       },
       {
-       "id": "t_b42e5fd3",
-       "title": "Раскидать канбан по проектам и перенести существующие задачи",
-       "assignee": null,
-       "priority": 3,
-       "created_at": 1793561866,
-       "completed_at": null
-      },
-      {
        "id": "t_8f6413a5",
        "title": "Кэш сгенерированных фраз для быстрой озвучки",
        "assignee": null,
@@ -348,6 +340,14 @@
        "priority": 3,
        "created_at": 1793553048,
        "completed_at": 1793553944
+      },
+      {
+       "id": "t_b42e5fd3",
+       "title": "Раскидать канбан по проектам и перенести существующие задачи",
+       "assignee": null,
+       "priority": 3,
+       "created_at": 1793561866,
+       "completed_at": 1793562821
       },
       {
        "id": "t_da23df3e",
