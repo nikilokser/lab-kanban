@@ -101,7 +101,7 @@ function uniqueAssignees(){
   const seen=new Set();const out=[];
   (DATA?DATA.boards:[]).forEach(b=>(b.columns||[]).forEach(c=>c.tasks.forEach(t=>{
     if(t.error)return;const key=t.assignee||'';
-    if(!seen.has(key)){seen.add(key);out.push([key,who(key)]);}
+    if(!seen.has(key)){seen.add(key);out.push([key||'__nobody',who(key)]);}
   })));
   out.sort((a,b)=>a[1].localeCompare(b[1],'ru'));
   return out;
@@ -109,13 +109,14 @@ function uniqueAssignees(){
 function render(){
   if(!DATA)return;
   const fb=document.getElementById('f-board').value;
-  const fa=document.getElementById('f-assignee').value;
+  const faraw=document.getElementById('f-assignee').value;
+  const fa=faraw==='__nobody'?'':faraw;
   fillSelect('f-board',DATA.boards.filter(b=>!b.error).map(b=>[b.slug,b.name]),'Все проекты');
   fillSelect('f-assignee',uniqueAssignees(),'Все исполнители');
-  document.getElementById('f-reset').hidden=!fb&&!fa;
+  document.getElementById('f-reset').hidden=!fb&&!faraw;
   let boards=DATA.boards;
   if(fb)boards=boards.filter(b=>b.slug===fb);
-  if(fa)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>(t.assignee||'')===fa)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
+  if(faraw)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>(t.assignee||'')===fa)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
   window.__tasks={};
   const html=boards.map(b=>{
     if(b.error)return '<section class="board"><h2>'+esc(b.name)+'</h2><div class="err">'+esc(b.error)+'</div></section>';
