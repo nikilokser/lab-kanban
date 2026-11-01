@@ -1,9 +1,265 @@
 {
- "generated_at": 1793562015,
+ "generated_at": 1793562748,
  "boards": [
   {
+   "slug": "braille-printer",
+   "name": "Принтер Брайля",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_9ec5f542",
+       "title": "Принтер Брайля: узел одной точки — усилие, шум, привод",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562615,
+       "completed_at": null
+      },
+      {
+       "id": "t_9283c548",
+       "title": "Принтер Брайля: ось головки и подача листа, тестовая страница",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562620,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "car",
+   "name": "Машинка",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_9daa964f",
+       "title": "Машинка: зафиксировать постановку проекта",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562677,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "gyrobot",
+   "name": "Гиробот",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_4b8d9210",
+       "title": "Гиробот: минимальный симулятор и PID/LQR baseline",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562596,
+       "completed_at": null
+      },
+      {
+       "id": "t_26fbd2a8",
+       "title": "Гиробот: выбор привода — TMC2209+MT6701 или SERVO42D",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562600,
+       "completed_at": null
+      },
+      {
+       "id": "t_2579274d",
+       "title": "Гиробот: согласовать камеру — OpenMV или MaixCAM",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562606,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "led-cube",
+   "name": "LED-куб",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_b78c43e5",
+       "title": "LED-куб: прототип одного стержня и малого блока",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562653,
+       "completed_at": null
+      },
+      {
+       "id": "t_84955fdc",
+       "title": "LED-куб: видимость внутренних пикселей, ток, нагрев",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562658,
+       "completed_at": null
+      },
+      {
+       "id": "t_da87ce66",
+       "title": "LED-куб: параллельный вывод ESP32-S3 на 60 fps",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562663,
+       "completed_at": null
+      },
+      {
+       "id": "t_bd8246cb",
+       "title": "LED-куб: силовая разводка и лимит яркости по измерениям",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562668,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "neuro-control",
+   "name": "Нейроуправление",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_db5570f8",
+       "title": "Нейроуправление: постановка — сигнал, объект, первый успех",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562696,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "photobox",
+   "name": "Фотобокс",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_2b8815ce",
+       "title": "Фотобокс: определить товар и камеру, выбрать размер бокса",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562629,
+       "completed_at": null
+      },
+      {
+       "id": "t_d3fe9019",
+       "title": "Фотобокс: собрать механику поворотного стола, замерить биение",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562634,
+       "completed_at": null
+      },
+      {
+       "id": "t_4f31ccbd",
+       "title": "Фотобокс: прошивка ESP32 и съёмка 24 кадров товара",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562639,
+       "completed_at": null
+      },
+      {
+       "id": "t_52cbd020",
+       "title": "Фотобокс: обновить смету LST60/LST80 перед закупкой",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562644,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "scanner-3d",
+   "name": "Сканер 3д",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_4c8486e4",
+       "title": "Сканер 3д: постановка — объект, точность, формат результата",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562687,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "syrok",
+   "name": "Сырок",
+   "columns": [
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_60b480c3",
+       "title": "Сырок: силовой каскад — обратные диоды и измерения на 16/32/78 кГц",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562572,
+       "completed_at": null
+      },
+      {
+       "id": "t_13494204",
+       "title": "Сырок: измерение батареи и компенсация тяги, посадка при разряде",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562576,
+       "completed_at": null
+      },
+      {
+       "id": "t_9526b41d",
+       "title": "Сырок: связь после arm и POS_HOLD после поворота",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562581,
+       "completed_at": null
+      },
+      {
+       "id": "t_3dda6c06",
+       "title": "Сырок: новая силовая плата (кандидат AON7524)",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793562586,
+       "completed_at": null
+      }
+     ]
+    }
+   ]
+  },
+  {
    "slug": "umnaia-laba",
-   "name": "umnaia-laba",
+   "name": "Умная лаба",
    "columns": [
     {
      "status": "ready",
