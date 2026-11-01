@@ -1,5 +1,5 @@
 {
- "generated_at": 1793565735,
+ "generated_at": 1793566683,
  "boards": [
   {
    "slug": "braille-printer",
@@ -290,14 +290,6 @@
        "completed_at": null
       },
       {
-       "id": "t_846e79dc",
-       "title": "Исследование: чем заменить Claude (доступ из РФ)",
-       "assignee": null,
-       "priority": 2,
-       "created_at": 1793561873,
-       "completed_at": null
-      },
-      {
        "id": "t_56c0e3a1",
        "title": "Помечать голосовые фразы ESP в Telegram префиксом",
        "assignee": null,
@@ -311,6 +303,20 @@
        "assignee": null,
        "priority": 0,
        "created_at": 1793553053,
+       "completed_at": null
+      }
+     ]
+    },
+    {
+     "status": "running",
+     "title": "В работе",
+     "tasks": [
+      {
+       "id": "t_846e79dc",
+       "title": "Исследование: чем заменить Claude (доступ из РФ)",
+       "assignee": null,
+       "priority": 2,
+       "created_at": 1793561873,
        "completed_at": null
       }
      ]
