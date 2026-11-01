@@ -1,0 +1,115 @@
+{
+ "generated_at": 1793560126,
+ "boards": [
+  {
+   "slug": "umnaia-laba",
+   "name": "umnaia-laba",
+   "columns": [
+    {
+     "status": "todo",
+     "title": "Очередь",
+     "tasks": [
+      {
+       "id": "t_da23df3e",
+       "title": "Внешний доступ к веб-панели лабы (выбрать и реализовать вариант)",
+       "assignee": "default",
+       "priority": 2,
+       "created_at": 1793553936,
+       "completed_at": null
+      }
+     ]
+    },
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_8f6413a5",
+       "title": "Кэш сгенерированных фраз для быстрой озвучки",
+       "assignee": null,
+       "priority": 2,
+       "created_at": 1793558337,
+       "completed_at": null
+      },
+      {
+       "id": "t_56c0e3a1",
+       "title": "Помечать голосовые фразы ESP в Telegram префиксом",
+       "assignee": null,
+       "priority": 1,
+       "created_at": 1793558342,
+       "completed_at": null
+      },
+      {
+       "id": "t_e09360e0",
+       "title": "Канбан-система по всем проектам",
+       "assignee": null,
+       "priority": 0,
+       "created_at": 1793553053,
+       "completed_at": null
+      },
+      {
+       "id": "t_2a8d491f",
+       "title": "Настроить клиенты (телефон/Mac) и проверить доступ извне",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": null
+      },
+      {
+       "id": "t_7a03b3e9",
+       "title": "Задокументировать способ доступа для новых пользователей",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": null
+      }
+     ]
+    },
+    {
+     "status": "blocked",
+     "title": "Заблокировано",
+     "tasks": [
+      {
+       "id": "t_07edb563",
+       "title": "Реворк голосового ввода: колонка Алиса (HackAlice) vs свой вейкворд",
+       "assignee": null,
+       "priority": 3,
+       "created_at": 1793558332,
+       "completed_at": null
+      }
+     ]
+    },
+    {
+     "status": "done",
+     "title": "Завершено",
+     "tasks": [
+      {
+       "id": "t_682151b3",
+       "title": "Веб-интерфейс лабы: конфиги, канбан, статус служб",
+       "assignee": null,
+       "priority": 3,
+       "created_at": 1793553048,
+       "completed_at": 1793553944
+      },
+      {
+       "id": "t_d1368101",
+       "title": "Выбрать вариант внешнего доступа к панели (Tailscale vs CF Tunnel vs порт)",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": 1793559505
+      },
+      {
+       "id": "t_e7c1789e",
+       "title": "Развернуть выбранный вариант доступа на сервере 192.168.1.244",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": 1793560125
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
