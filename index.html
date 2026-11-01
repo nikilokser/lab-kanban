@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Канбан лабы · зеркало</title>
+<style>
+:root{--bg:#10171a;--panel:#172226;--panel2:#1d2b30;--line:#26383e;--text:#d9e6e9;--dim:#7f979d;--accent:#87d8b0;--warn:#e78372;--amber:#e9b978;--blue:#7fb8d8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,"Segoe UI",system-ui,sans-serif}
+header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+h1{font-size:16px;margin:0}
+.dim{color:var(--dim);font-size:12px}
+main{padding:14px 12px 30px}
+.board{margin-bottom:26px}
+.board h2{font-size:14px;margin:0 0 8px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+.cols{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.col{flex:1 0 170px;max-width:300px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
+.col h3{font-size:11px;margin:0 0 6px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+.col h3 span{float:right;color:var(--text)}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 9px;margin-bottom:6px;font-size:13px}
+.meta{margin-top:3px;font-size:11px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap}
+.err{color:var(--warn)}
+footer{padding:8px 16px 18px;font-size:12px;color:var(--dim)}
+a{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+<header><h1>Канбан лабы</h1><div class="dim" id="updated">загрузка…</div></header>
+<main id="content"><div class="dim">Загрузка…</div></main>
+<footer>Зеркало канбан-досок лаборатории · только чтение · обновляется автоматически</footer>
+<script>
+'use strict';
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})};
+fetch('data.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
+  document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
+  const html=(data.boards||[]).map(b=>{
+    if(b.error)return '<section class="board"><h2>'+esc(b.name)+'</h2><div class="err">'+esc(b.error)+'</div></section>';
+    const cols=(b.columns||[]).map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
+      c.tasks.map(t=>'<div class="card">'+esc(t.title)+
+        '<div class="meta">'+(t.assignee?'<span>'+esc(t.assignee)+'</span>':'')+
+        (t.priority?'<span>P'+esc(t.priority)+'</span>':'')+
+        (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>').join('')+
+      (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
+    return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+(b.columns||[]).reduce((n,c)=>n+c.tasks.length,0)+'</span></h2><div class="cols">'+cols+'</div></section>';
+  }).join('');
+  document.getElementById('content').innerHTML=html||'<div class="dim">досок нет</div>';
+}).catch(e=>{document.getElementById('content').innerHTML='<div class="err">Не удалось загрузить данные: '+esc(e.message)+'</div>'});
+</script>
+</body>
+</html>
