@@ -1,34 +1,52 @@
 {
- "generated_at": 1793561055,
+ "generated_at": 1793562015,
  "boards": [
   {
    "slug": "umnaia-laba",
    "name": "umnaia-laba",
    "columns": [
     {
-     "status": "todo",
-     "title": "Очередь",
-     "tasks": [
-      {
-       "id": "t_da23df3e",
-       "title": "Внешний доступ к веб-панели лабы (выбрать и реализовать вариант)",
-       "assignee": "default",
-       "priority": 2,
-       "created_at": 1793553936,
-       "completed_at": null
-      }
-     ]
-    },
-    {
      "status": "ready",
      "title": "Готово к работе",
      "tasks": [
+      {
+       "id": "t_5cd2e2d6",
+       "title": "Раскидать канбан по проектам и перенести существующие задачи",
+       "assignee": null,
+       "priority": 3,
+       "created_at": 1793561846,
+       "completed_at": null
+      },
+      {
+       "id": "t_b42e5fd3",
+       "title": "Раскидать канбан по проектам и перенести существующие задачи",
+       "assignee": null,
+       "priority": 3,
+       "created_at": 1793561866,
+       "completed_at": null
+      },
       {
        "id": "t_8f6413a5",
        "title": "Кэш сгенерированных фраз для быстрой озвучки",
        "assignee": null,
        "priority": 2,
        "created_at": 1793558337,
+       "completed_at": null
+      },
+      {
+       "id": "t_88d59d8b",
+       "title": "Исследование: чем заменить Claude (доступ из РФ)",
+       "assignee": null,
+       "priority": 2,
+       "created_at": 1793561851,
+       "completed_at": null
+      },
+      {
+       "id": "t_846e79dc",
+       "title": "Исследование: чем заменить Claude (доступ из РФ)",
+       "assignee": null,
+       "priority": 2,
+       "created_at": 1793561873,
        "completed_at": null
       },
       {
@@ -45,20 +63,6 @@
        "assignee": null,
        "priority": 0,
        "created_at": 1793553053,
-       "completed_at": null
-      }
-     ]
-    },
-    {
-     "status": "running",
-     "title": "В работе",
-     "tasks": [
-      {
-       "id": "t_2a8d491f",
-       "title": "Настроить клиенты (телефон/Mac) и проверить доступ извне",
-       "assignee": "default",
-       "priority": 0,
-       "created_at": 1793559425,
        "completed_at": null
       }
      ]
@@ -90,6 +94,14 @@
        "completed_at": 1793553944
       },
       {
+       "id": "t_da23df3e",
+       "title": "Внешний доступ к веб-панели лабы (выбрать и реализовать вариант)",
+       "assignee": "default",
+       "priority": 2,
+       "created_at": 1793553936,
+       "completed_at": 1793561966
+      },
+      {
        "id": "t_d1368101",
        "title": "Выбрать вариант внешнего доступа к панели (Tailscale vs CF Tunnel vs порт)",
        "assignee": "default",
@@ -104,6 +116,14 @@
        "priority": 0,
        "created_at": 1793559425,
        "completed_at": 1793560125
+      },
+      {
+       "id": "t_2a8d491f",
+       "title": "Настроить клиенты (телефон/Mac) и проверить доступ извне",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": 1793561964
       },
       {
        "id": "t_7a03b3e9",
