@@ -1,5 +1,5 @@
 {
- "generated_at": 1793560148,
+ "generated_at": 1793561055,
  "boards": [
   {
    "slug": "umnaia-laba",
@@ -45,14 +45,6 @@
        "assignee": null,
        "priority": 0,
        "created_at": 1793553053,
-       "completed_at": null
-      },
-      {
-       "id": "t_7a03b3e9",
-       "title": "Задокументировать способ доступа для новых пользователей",
-       "assignee": "default",
-       "priority": 0,
-       "created_at": 1793559425,
        "completed_at": null
       }
      ]
@@ -112,6 +104,14 @@
        "priority": 0,
        "created_at": 1793559425,
        "completed_at": 1793560125
+      },
+      {
+       "id": "t_7a03b3e9",
+       "title": "Задокументировать способ доступа для новых пользователей",
+       "assignee": "default",
+       "priority": 0,
+       "created_at": 1793559425,
+       "completed_at": 1793560784
       }
      ]
     }
