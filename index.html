@@ -51,10 +51,14 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
 #taskbox h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px}
 #taskbox .close{float:right;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer}
 #taskbox b{color:var(--accent)}
+#filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px 0}
+#filters select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 8px;font:inherit;font-size:13px;max-width:45vw}
+#filters button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:12px}
 </style>
 </head>
 <body>
 <header><h1>Канбан лабы</h1><div class="dim" id="updated">загрузка…</div><button id="helpbtn" title="Что здесь означает" aria-label="Справка">?</button></header>
+<div id="filters"><select id="f-board"><option value="">Все проекты</option></select><select id="f-assignee"><option value="">Все исполнители</option></select><button id="f-reset" hidden>Сброс</button></div>
 <main id="content"><div class="dim">Загрузка…</div></main>
 <footer>Зеркало канбан-досок лаборатории · только чтение · обновляется автоматически</footer>
 <div id="overlay"><div id="helpbox">
@@ -84,22 +88,63 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
 'use strict';
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})};
-fetch('data.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
-  document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
-  const tasks={};
-  const html=(data.boards||[]).map(b=>{
+let DATA=null;
+const USER_MAP={'nikilokser':'niki'};
+const who=a=>a==='default'?'Авто':(a?a:'Лира (ночь)');
+function fillSelect(id,pairs,allLabel){
+  const sel=document.getElementById(id);
+  const cur=sel.value;
+  sel.innerHTML='<option value="">'+esc(allLabel)+'</option>'+pairs.map(p=>'<option value="'+esc(p[0])+'">'+esc(p[1])+'</option>').join('');
+  if(pairs.some(p=>p[0]===cur))sel.value=cur;
+}
+function uniqueAssignees(){
+  const seen=new Set();const out=[];
+  (DATA?DATA.boards:[]).forEach(b=>(b.columns||[]).forEach(c=>c.tasks.forEach(t=>{
+    if(t.error)return;const key=t.assignee||'';
+    if(!seen.has(key)){seen.add(key);out.push([key,who(key)]);}
+  })));
+  out.sort((a,b)=>a[1].localeCompare(b[1],'ru'));
+  return out;
+}
+function render(){
+  if(!DATA)return;
+  const fb=document.getElementById('f-board').value;
+  const fa=document.getElementById('f-assignee').value;
+  fillSelect('f-board',DATA.boards.filter(b=>!b.error).map(b=>[b.slug,b.name]),'Все проекты');
+  fillSelect('f-assignee',uniqueAssignees(),'Все исполнители');
+  document.getElementById('f-reset').hidden=!fb&&!fa;
+  let boards=DATA.boards;
+  if(fb)boards=boards.filter(b=>b.slug===fb);
+  if(fa)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>(t.assignee||'')===fa)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
+  window.__tasks={};
+  const html=boards.map(b=>{
     if(b.error)return '<section class="board"><h2>'+esc(b.name)+'</h2><div class="err">'+esc(b.error)+'</div></section>';
-    const cols=(b.columns||[]).map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
-      c.tasks.map(t=>{tasks[t.id]=t;t._board=b.name;t._status=c.title;
+    const cols=b.columns.map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
+      c.tasks.map(t=>{window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
         return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
-        '<div class="meta">'+(t.assignee?'<span>'+esc(t.assignee==='default'?'Авто':t.assignee)+'</span>':'<span>Лира (ночь)</span>')+
+        '<div class="meta">'+(t.assignee?'<span>'+esc(who(t.assignee))+'</span>':'<span>Лира (ночь)</span>')+
         (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
         (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
       (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
-    return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+(b.columns||[]).reduce((n,c)=>n+c.tasks.length,0)+'</span></h2><div class="cols">'+cols+'</div></section>';
+    return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+b.columns.reduce((n,c)=>n+c.tasks.length,0)+'</span></h2><div class="cols">'+cols+'</div></section>';
   }).join('');
-  window.__tasks=tasks;
-  document.getElementById('content').innerHTML=html||'<div class="dim">досок нет</div>';
+  document.getElementById('content').innerHTML=html||(fa?'<div class="dim">У этого исполнителя сейчас нет задач</div>':'<div class="dim">досок нет</div>');
+}
+function autoPickUser(){
+  if(window.__userPicked)return;
+  const tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+  const u=tg&&tg.initDataUnsafe?tg.initDataUnsafe.user:null;
+  const un=u&&u.username?u.username.toLowerCase():null;
+  if(!un)return;
+  const target=USER_MAP[un]||un;
+  const sel=document.getElementById('f-assignee');
+  if(Array.prototype.some.call(sel.options,o=>o.value===target)){sel.value=target;window.__userPicked=true;render();}
+}
+fetch('data.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
+  DATA=data;
+  document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
+  render();
+  autoPickUser();
 }).catch(e=>{document.getElementById('content').innerHTML='<div class="err">Не удалось загрузить данные: '+esc(e.message)+'</div>'});
 const fmtFull=ts=>ts?new Date(ts*1000).toLocaleString('ru-RU'):'—';
 const resultText=t=>{const own=(t.result||'').trim();if(own)return own;const r=(t.runs||[]).find(r=>(r.summary||'').trim());return r?r.summary.trim():''};
@@ -130,6 +175,9 @@ document.getElementById('content').addEventListener('click',e=>{
   const card=e.target.closest('.card.click');
   if(card&&card.dataset.id)openTask(card.dataset.id);
 });
+document.getElementById('f-board').addEventListener('change',()=>{window.__userPicked=true;render()});
+document.getElementById('f-assignee').addEventListener('change',()=>{window.__userPicked=true;render()});
+document.getElementById('f-reset').addEventListener('click',()=>{document.getElementById('f-board').value='';document.getElementById('f-assignee').value='';render()});
 document.getElementById('taskoverlay').addEventListener('click',e=>{if(e.target.id==='taskoverlay')closeTask()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTask()});
 if(window.Telegram&&window.Telegram.WebApp){try{window.Telegram.WebApp.ready();window.Telegram.WebApp.expand()}catch(e){}}
