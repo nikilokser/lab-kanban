@@ -1,5 +1,5 @@
 {
- "generated_at": 1793566736,
+ "generated_at": 1793567164,
  "boards": [
   {
    "slug": "braille-printer",
@@ -444,6 +444,21 @@
        "priority": 2,
        "created_by": "Ники (через Лиру)",
        "created_at": 1793561851,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "comments": [],
+       "runs": []
+      },
+      {
+       "id": "t_cf9af62d",
+       "title": "Починить фоновый движок исследований (research_submit падает no_sources)",
+       "body": "**Ники (2 ноября): починить фоновый движок исследований.**\n\nСимптомы: research_submit дважды падает с ошибкой `no_sources` через 16–40 с (runs a5b37a5e… и e6aa3941… от 2.11, ~03:30). Веб-поиск тем временем работает: web_search отдаёт результаты, но с пометкой `backend_error: Configured backend 'ddgs' failed this call (DuckDuckGo search failed: DDGSException: No results found.); result served by the keyless free tier` — т.е. настроенный бэкенд ddgs у движка не отвечает, и research-пайплайн на нём падает целиком, а web_search спасается бесплатным тиром.\n\nЧто сделать:\n1. Найти, откуда lab_research берёт поисковый бэкенд (плагин /home/laba/.hermes/plugins/, ключи в конфигах; вероятная зависимость — python-библиотека ddgs/DuckDuckGo).\n2. Проверить воспроизводимость: curl к duckduckgo из лабы, тест ddgs в python.\n3. Починить: обновить/перезакрепить ddgs, переключить бэкенд на рабочий (firecrawl-ключ уже есть в .env — FIRECRAWL_API_URL), либо прописать фолбэк.\n4. Проверить: research_submit с коротким запросом доводится до needs_review/результата.\n5. Отчёт в карточке: причина, что изменил, результат теста.\n\nЗаметка для себя: из-за этого падения ночная смена не сможет делать research-карточки — чинить до первого использования в ночи.\n",
+       "status": "ready",
+       "assignee": null,
+       "priority": 2,
+       "created_by": "Ники (через Лиру)",
+       "created_at": 1793566859,
        "completed_at": null,
        "result": null,
        "block_kind": null,
