@@ -1,5 +1,5 @@
 {
- "generated_at": 1793560126,
+ "generated_at": 1793560148,
  "boards": [
   {
    "slug": "umnaia-laba",
@@ -48,16 +48,22 @@
        "completed_at": null
       },
       {
-       "id": "t_2a8d491f",
-       "title": "Настроить клиенты (телефон/Mac) и проверить доступ извне",
+       "id": "t_7a03b3e9",
+       "title": "Задокументировать способ доступа для новых пользователей",
        "assignee": "default",
        "priority": 0,
        "created_at": 1793559425,
        "completed_at": null
-      },
+      }
+     ]
+    },
+    {
+     "status": "running",
+     "title": "В работе",
+     "tasks": [
       {
-       "id": "t_7a03b3e9",
-       "title": "Задокументировать способ доступа для новых пользователей",
+       "id": "t_2a8d491f",
+       "title": "Настроить клиенты (телефон/Mac) и проверить доступ извне",
        "assignee": "default",
        "priority": 0,
        "created_at": 1793559425,
