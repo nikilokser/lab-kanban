@@ -75,8 +75,7 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
   </ul>
   <h3>Метка на карточке</h3>
   <ul>
-    <li><b>Авто</b> — задачу выполняет воркер-диспетчер автоматически.</li>
-    <li><b>Лира (ночь)</b> — задачу выполняет Лира в ночную смену (04:30, до двух задач за ночь).</li>
+    <li><b>Без исполнителя</b> — задачу никто не взял; можно взять самому.</li>
     <li><b>Имя</b> — конкретный человек из команды лабы.</li>
     <li><b>P1 / P2 / P3</b> — приоритет: P1 важнее P2, P2 важнее P3.</li>
   </ul>
@@ -90,7 +89,7 @@ const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})};
 let DATA=null;
 const USER_MAP={'nikilokser':'niki'};
-const who=a=>a==='default'?'Авто':(a?a:'Лира (ночь)');
+const who=a=>(a&&a!=='default')?a:'Без исполнителя';
 function fillSelect(id,pairs,allLabel){
   const sel=document.getElementById(id);
   const cur=sel.value;
@@ -123,7 +122,7 @@ function render(){
     const cols=b.columns.map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
       c.tasks.map(t=>{window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
         return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
-        '<div class="meta">'+(t.assignee?'<span>'+esc(who(t.assignee))+'</span>':'<span>Лира (ночь)</span>')+
+        '<div class="meta">'+(t.assignee&&t.assignee!=='default'?'<span title="исполнитель">'+esc(who(t.assignee))+'</span>':'')+
         (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
         (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
       (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
@@ -161,7 +160,7 @@ function openTask(id){
     '<h2>'+esc(t.title||'—')+'</h2>'+
     '<div class="row"><span class="k">Доска</span><span class="v">'+esc(t._board||'—')+'</span></div>'+
     '<div class="row"><span class="k">Статус</span><span class="v">'+esc(t._status||t.status||'—')+'</span></div>'+
-    '<div class="row"><span class="k">Исполнитель</span><span class="v">'+esc(t.assignee?(t.assignee==='default'?'Авто':t.assignee):'Лира (ночь)')+'</span></div>'+
+    '<div class="row"><span class="k">Исполнитель</span><span class="v">'+esc(who(t.assignee))+'</span></div>'+
     '<div class="row"><span class="k">Приоритет</span><span class="v">'+(t.priority?'P'+esc(t.priority):'—')+'</span></div>'+
     '<div class="row"><span class="k">Кто завёл</span><span class="v">'+esc(t.created_by||'—')+'</span></div>'+
     '<div class="row"><span class="k">Создана</span><span class="v">'+fmtFull(t.created_at)+'</span></div>'+
