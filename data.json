@@ -1,5 +1,5 @@
 {
- "generated_at": 1793741895,
+ "generated_at": 1793742808,
  "boards": [
   {
    "slug": "braille-printer",
@@ -417,7 +417,13 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
-       "comments": [],
+       "comments": [
+        {
+         "author": "Лира (крон)",
+         "body": "Замер POST-эндпоинтов панели готов (ночь 04.11, доска default, тестовая карточка, заархивирована). Все цифры — реальный HTTP к :3016 и CLI.\n\nФакты:\n• Каждый POST сейчас = subprocess «hermes kanban …» (kanban_cmd в app.py). Замер HTTP: create 6.5 с, comment 6.5 с, assign 7.0 с, edit 7.0 с, action block 7.2 с / archive 6.7 с.\n• Декомпозиция: старт python 0.02 с; import hermes_bootstrap+hermes_cli.main 3.3 с; механика kanban-подкоманды ~3 с; сама запись в SQLite 0.001–0.12 с. ~99% времени — обвязка, не работа.\n• Панель уже ходит в sqlite напрямую: чтения (_task_board/_task_status/_task_state_is) и _set_status. Паттерн в коде есть.\n\nЧто ускоряем (после согласования):\n1. comment — самая частая кнопка: прямой INSERT в task_comments + запись события в task_events (как делает CLI, иначе отвалятся tail/notify). 6.5 с → ~0.2 с.\n2. edit (title/body/priority) — прямой UPDATE. 7.0 с → ~0.2 с.\n3. create «на ночь» (create+assign+block = 3 CLI-вызова ≈ 19 с): block заменить прямой записью статуса + событием, create/assign оставить в CLI (генерация id, диспатчер). ~19 с → ~13 с.\n4. create обычный — можно тоже прямым INSERT (средний риск: надо точно скопировать схему tasks), либо оставить 6.5 с.\n\nЧто НЕ трогаем:\n• assign, complete, block/unblock, archive, reclaim — статусные машины, события, хуки уведомлений (notify-subscribe) и диспатчер; только через CLI, чтобы не разъехаться с семантикой.\n• Правило на будущее: чтения и точечные записи — sqlite, статусные машины/события — CLI.\n\nВариант Б (отдельное решение, не в этот заход): перевести сервис панели с /usr/bin/python3 на tools-python hermes и звать kanban-функции in-process — уйдут и 3.3 с импорта, и subprocess. Смена окружения сервиса, средний риск.\n\nБаза для проверки правки: тесты панели (test_web.py, 8/8) как в карточке. Жду согласования — после него сделаю правку по пунктам 1–3 с бекапом и прогоном тестов.",
+         "created_at": 1793742196
+        }
+       ],
        "runs": []
       }
      ]
