@@ -1,5 +1,5 @@
 {
- "generated_at": 1793688855,
+ "generated_at": 1793689815,
  "boards": [
   {
    "slug": "braille-printer",
@@ -434,6 +434,21 @@
        "block_kind": null,
        "comments": [],
        "runs": []
+      },
+      {
+       "id": "t_cb0bdc19",
+       "title": "Дать laba право перезапускать системные юниты (polkit)",
+       "body": "## Зачем\nWatchdog самовосстановления (`/home/laba/.hermes/scripts/health_watchdog.py`, таймер health-watchdog.timer каждые 15 мин) умеет поднимать user-юниты (гейтвей, панели, голос), но системные юниты рестартовать не может: `systemctl restart <unit>` от laba упирается в polkit — Access denied.\n\nСейчас если ляжет один из системных юнитов, watchdog может только прислать сообщение — чинить их придётся вручную.\n\n## Что нужно (root, одна команда-файл)\nСоздать `/etc/polkit-1/rules.d/50-lab-restart.rules`:\n\n```javascript\npolkit.addRule(function(action, subject) {\n    if (action.id == \"org.freedesktop.systemd1.manage-units\" &&\n        subject.user == \"laba\" &&\n        [\"smart-lab-voice-stream.service\",\n         \"smart-lab-research-isolated.service\",\n         \"firecrawl-on-demand.service\"].includes(action.lookup(\"unit\"))) {\n        return polkit.Result.YES;\n    }\n});\n```\n\nПерезагрузка не нужна, polkit читает правила на лету.\n\n## Проверка\n- `systemctl restart smart-lab-research-isolated` от laba — должно пройти без ошибки (юнит поднимется, Restart=on-failure вернёт его в работу).\n- После этого watchdog при падении любого из трёх юнитов станет не только сообщать, но и поднимать его автоматически.\n",
+       "status": "ready",
+       "assignee": "none",
+       "priority": 3,
+       "created_by": "user",
+       "created_at": 1793689769,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "comments": [],
+       "runs": []
       }
      ]
     },
@@ -576,33 +591,6 @@
          "outcome": "reclaimed",
          "summary": null,
          "ended_at": 1793688032
-        }
-       ]
-      },
-      {
-       "id": "t_076e4f3d",
-       "title": "[Баг] Порт закрыт: Сервис :3010",
-       "body": "TCP-порт 3010 не принимает соединения.\n\nНайдено авто-диагностикой, 03.11.2026 13:52.",
-       "status": "blocked",
-       "assignee": "default",
-       "priority": 2,
-       "created_by": "Авто-диагностика лабы",
-       "created_at": 1793688791,
-       "completed_at": null,
-       "result": null,
-       "block_kind": "needs_input",
-       "comments": [
-        {
-         "author": "default",
-         "body": "BLOCKED: Ждёт ночной смены (04:30): авто-диагностика",
-         "created_at": 1793688804
-        }
-       ],
-       "runs": [
-        {
-         "outcome": "blocked",
-         "summary": "Ждёт ночной смены (04:30): авто-диагностика",
-         "ended_at": 1793688805
         }
        ]
       },
