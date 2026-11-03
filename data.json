@@ -1,5 +1,5 @@
 {
- "generated_at": 1793726068,
+ "generated_at": 1793726968,
  "boards": [
   {
    "slug": "braille-printer",
@@ -446,7 +446,7 @@
        "title": "[Улучшение] Добавить laba в группу systemd-journal",
        "body": "Диагностика видит логи только своего пользователя: laba не в группе systemd-journal. sudo usermod -aG systemd-journal laba (перелогин) — и авто-диагностика сможет читать ошибки всех сервисов.\n\nНайдено авто-диагностикой, 03.11.2026 13:52.",
        "status": "blocked",
-       "assignee": null,
+       "assignee": "niki",
        "priority": 5,
        "created_by": "Авто-диагностика лабы",
        "created_at": 1793688812,
