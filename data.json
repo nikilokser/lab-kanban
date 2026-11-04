@@ -1,5 +1,5 @@
 {
- "generated_at": 1793795835,
+ "generated_at": 1793796739,
  "boards": [
   {
    "slug": "braille-printer",
@@ -574,46 +574,6 @@
        "deadline_ts": null,
        "comments": [],
        "runs": []
-      }
-     ]
-    },
-    {
-     "status": "blocked",
-     "title": "Заблокировано",
-     "tasks": [
-      {
-       "id": "t_413f64f8",
-       "title": "[Баг BUG-006] OpenRouter: нулевой лимит/баланс ключа",
-       "body": "Запросы через OpenRouter не проходят из-за нулевого лимита ключа.\n\nНомер: **BUG-006** (реестр ~/.hermes/bug_registry.json)\nПричина не установлена. План: проверить кредиты и статус ключа через GET /api/v1/key с ключом из конфига, посмотреть ответ API; если ключ пуст — сообщить Ники (нужен новый ключ/пополнение).",
-       "status": "blocked",
-       "assignee": null,
-       "priority": 3,
-       "created_by": "Лира (багфикс-день)",
-       "created_at": 1793786938,
-       "completed_at": null,
-       "result": null,
-       "block_kind": "needs_input",
-       "deadline": null,
-       "deadline_ts": null,
-       "comments": [
-        {
-         "author": "default",
-         "body": "Диагноз (04.11, Лира): ключ валиден и активен, GET /api/v1/key → usage=0, **limit=0**, is_free_tier=false. То есть OpenRouter не сломан — просто кредитный лимит ключа выставлен в ноль, любой запрос упирается в баланс. Нужно решение Ники: пополнить аккаунт или выставить лимит. После решения закрыть: bug_registry.py close BUG-006 --fix '…'",
-         "created_at": 1793786996
-        },
-        {
-         "author": "default",
-         "body": "BLOCKED: Ждёт решения Ники: пополнить OpenRouter или выставить лимит ключу (сейчас limit=0)",
-         "created_at": 1793787002
-        }
-       ],
-       "runs": [
-        {
-         "outcome": "blocked",
-         "summary": "Ждёт решения Ники: пополнить OpenRouter или выставить лимит ключу (сейчас limit=0)",
-         "ended_at": 1793787002
-        }
-       ]
       }
      ]
     },
