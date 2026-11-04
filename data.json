@@ -1,52 +1,6 @@
 {
- "generated_at": 1793795116,
+ "generated_at": 1793795191,
  "boards": [
-  {
-   "slug": "default",
-   "name": "Общая",
-   "columns": [
-    {
-     "status": "ready",
-     "title": "Готово к работе",
-     "tasks": [
-      {
-       "id": "t_d16c6c63",
-       "title": "Тест дедлайна",
-       "body": "проверка парсинга\n\nДедлайн: 2026-11-01",
-       "status": "ready",
-       "assignee": "lira",
-       "priority": 9,
-       "created_by": "Ники (панель)",
-       "created_at": 1793794863,
-       "completed_at": null,
-       "result": null,
-       "block_kind": null,
-       "deadline": "01.11.2026",
-       "deadline_ts": 1793552399.0,
-       "comments": [],
-       "runs": []
-      },
-      {
-       "id": "t_874e746d",
-       "title": "Тест дедлайна",
-       "body": "проверка парсинга\n\nДедлайн: 2026-11-01",
-       "status": "ready",
-       "assignee": "lira",
-       "priority": 9,
-       "created_by": "Ники (панель)",
-       "created_at": 1793794869,
-       "completed_at": null,
-       "result": null,
-       "block_kind": null,
-       "deadline": "01.11.2026",
-       "deadline_ts": 1793552399.0,
-       "comments": [],
-       "runs": []
-      }
-     ]
-    }
-   ]
-  },
   {
    "slug": "braille-printer",
    "name": "Принтер Брайля",
