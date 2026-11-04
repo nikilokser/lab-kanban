@@ -1,5 +1,5 @@
 {
- "generated_at": 1793787448,
+ "generated_at": 1793788348,
  "boards": [
   {
    "slug": "braille-printer",
@@ -459,21 +459,6 @@
        "priority": 4,
        "created_by": "Лира (багфикс-день)",
        "created_at": 1793786944,
-       "completed_at": null,
-       "result": null,
-       "block_kind": null,
-       "comments": [],
-       "runs": []
-      },
-      {
-       "id": "t_fe6bf01a",
-       "title": "[Баг BUG-008] На роутер кто-то заходит по SSH-ключу, которого мы не заводили",
-       "body": "Лог dropbear роутера (02.11): `Pubkey auth succeeded for root, ssh-ed25519 SHA256:LYqu23vmDBex8yi9MTectKZJm7FmaUgNZo02sJE4O3E, с 192.168.1.244` (сервер лабы).\n\nНомер: **BUG-008** (реестр ~/.hermes/bug_registry.json)\nКлюч лежит в authorized_keys роутера, но кто его туда положил и у кого приватная половина — не выяснено.\nПлан: сравнить отпечаток с ключами сервера (~/.ssh/*.pub), спросить Ники, при необходимости убрать лишний ключ.",
-       "status": "ready",
-       "assignee": null,
-       "priority": 4,
-       "created_by": "Лира (багфикс-день)",
-       "created_at": 1793786950,
        "completed_at": null,
        "result": null,
        "block_kind": null,
