@@ -22,6 +22,8 @@ main{padding:14px 12px 30px}
 .col h3 span{float:right;color:var(--text)}
 .card{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 9px;margin-bottom:6px;font-size:13px}
 .meta{margin-top:3px;font-size:11px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap}
+.dl{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--line);background:var(--panel2)}
+.dl.over{color:var(--warn);border-color:var(--warn)}
 .err{color:var(--warn)}
 footer{padding:8px 16px 18px;font-size:12px;color:var(--dim)}
 a{color:var(--blue);text-decoration:none}
@@ -78,6 +80,7 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
     <li><b>Без исполнителя</b> — задачу никто не взял; можно взять самому.</li>
     <li><b>Имя</b> — конкретный человек из команды лабы.</li>
     <li><b>P1 / P2 / P3</b> — приоритет: P1 важнее P2, P2 важнее P3.</li>
+    <li><b>📅 дата</b> — дедлайн задачи; красный — просрочен. Дедлайн необязателен.</li>
   </ul>
   <h3>Как это работает</h3>
   <p>Это зеркало: обновляется автоматически каждые 15 минут, когда доска меняется. Нажми на карточку — откроется описание, результат и комментарии. Секреты из текстов вычищаются автоматически; вложения остаются в лаборатории. Полная панель лабы доступна из локальной сети и через Tailscale.</p>
@@ -90,6 +93,12 @@ const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateSt
 let DATA=null;
 const USER_MAP={'nikilokser':'niki'};
 const who=a=>a==='lira'?'Лира':(a==='default'?'Лира (ночь)':(a?a:'Без исполнителя'));
+const dlBadge=t=>{
+  if(!t.deadline)return'';
+  const open=t.status!=='done'&&t.status!=='archived';
+  const over=open&&t.deadline_ts&&t.deadline_ts*1000<Date.now();
+  return '<span class="dl'+(over?' over':'')+'" title="'+(over?'дедлайн просрочен':'дедлайн задачи')+'">📅 '+esc(t.deadline)+(over?' · просрочен':'')+'</span>';
+};
 function fillSelect(id,pairs,allLabel){
   const sel=document.getElementById(id);
   const cur=sel.value;
@@ -123,6 +132,7 @@ function render(){
       c.tasks.map(t=>{window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
         return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
         '<div class="meta">'+(t.assignee&&t.assignee!=='default'?'<span title="исполнитель">'+esc(who(t.assignee))+'</span>':'')+
+        dlBadge(t)+
         (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
         (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
       (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
@@ -162,6 +172,7 @@ function openTask(id){
     '<div class="row"><span class="k">Статус</span><span class="v">'+esc(t._status||t.status||'—')+'</span></div>'+
     '<div class="row"><span class="k">Исполнитель</span><span class="v">'+esc(who(t.assignee))+'</span></div>'+
     '<div class="row"><span class="k">Приоритет</span><span class="v">'+(t.priority?'P'+esc(t.priority):'—')+'</span></div>'+
+    '<div class="row"><span class="k">Дедлайн</span><span class="v">'+(t.deadline?esc(t.deadline):'—')+'</span></div>'+
     '<div class="row"><span class="k">Кто завёл</span><span class="v">'+esc(t.created_by||'—')+'</span></div>'+
     '<div class="row"><span class="k">Создана</span><span class="v">'+fmtFull(t.created_at)+'</span></div>'+
     (t.completed_at?'<div class="row"><span class="k">Завершена</span><span class="v">'+fmtFull(t.completed_at)+'</span></div>':'')+
