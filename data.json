@@ -1,6 +1,75 @@
 {
- "generated_at": 1793793975,
+ "generated_at": 1793794879,
  "boards": [
+  {
+   "slug": "default",
+   "name": "Общая",
+   "columns": [
+    {
+     "status": "todo",
+     "title": "Очередь",
+     "tasks": [
+      {
+       "id": "t_0b8880e5",
+       "title": "Тест дедлайна",
+       "body": "проверка парсинга\n\nДедлайн: 2026-11-01",
+       "status": "todo",
+       "assignee": "lira",
+       "priority": 9,
+       "created_by": "Ники (панель)",
+       "created_at": 1793794875,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "deadline": "01.11.2026",
+       "deadline_ts": 1793552399.0,
+       "comments": [],
+       "runs": []
+      }
+     ]
+    },
+    {
+     "status": "ready",
+     "title": "Готово к работе",
+     "tasks": [
+      {
+       "id": "t_d16c6c63",
+       "title": "Тест дедлайна",
+       "body": "проверка парсинга\n\nДедлайн: 2026-11-01",
+       "status": "ready",
+       "assignee": "lira",
+       "priority": 9,
+       "created_by": "Ники (панель)",
+       "created_at": 1793794863,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "deadline": "01.11.2026",
+       "deadline_ts": 1793552399.0,
+       "comments": [],
+       "runs": []
+      },
+      {
+       "id": "t_874e746d",
+       "title": "Тест дедлайна",
+       "body": "проверка парсинга\n\nДедлайн: 2026-11-01",
+       "status": "ready",
+       "assignee": "lira",
+       "priority": 9,
+       "created_by": "Ники (панель)",
+       "created_at": 1793794869,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "deadline": "01.11.2026",
+       "deadline_ts": 1793552399.0,
+       "comments": [],
+       "runs": []
+      }
+     ]
+    }
+   ]
+  },
   {
    "slug": "braille-printer",
    "name": "Принтер Брайля",
@@ -21,6 +90,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -36,6 +107,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -63,6 +136,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -90,6 +165,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -105,6 +182,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -120,6 +199,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -147,6 +228,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -162,6 +245,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -177,6 +262,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -192,6 +279,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -219,6 +308,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -246,6 +337,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -261,6 +354,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -276,6 +371,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -291,6 +388,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -318,6 +417,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -345,6 +446,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -360,6 +463,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -375,6 +480,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -390,6 +497,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       }
@@ -417,6 +526,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -432,6 +543,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -447,6 +560,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -462,6 +577,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": []
       },
@@ -477,6 +594,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -489,6 +608,40 @@
          "created_at": 1793789753
         }
        ],
+       "runs": []
+      },
+      {
+       "id": "t_bf9294b9",
+       "title": "Ричи мини: смета и закупки (совместно с Левом)",
+       "body": "Постановка от Ники (02.11.2026, группа «Сверх.лаба»):\n\n«все на вас задача начать че то делать ебать, а то приходите и сидите просто. если делаем ричи мини, значит делаем, составляем смету и начинаем закупать все что надо.»\n\nЧто нужно сделать:\n1. Если решили делать «Ричи мини» — делаем: составить смету (полный список комплектующих/материалов с ценами).\n2. Начать закупки по смете (что можно — сразу).\n\nДетали по проекту «Ричи мини» уточнять у Ники. Работать вместе с Левом (@nilmayerlev, отдельная карточка). Прогресс по закупкам фиксировать в этой карточке.",
+       "status": "ready",
+       "assignee": "alexey_alkogolniy",
+       "priority": 3,
+       "created_by": "default",
+       "created_at": 1793794617,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
+       "comments": [],
+       "runs": []
+      },
+      {
+       "id": "t_e219776f",
+       "title": "Ричи мини: смета и закупки (совместно с Лехой)",
+       "body": "Постановка от Ники (02.11.2026, группа «Сверх.лаба»):\n\n«все на вас задача начать че то делать ебать, а то приходите и сидите просто. если делаем ричи мини, значит делаем, составляем смету и начинаем закупать все что надо.»\n\nЧто нужно сделать:\n1. Если решили делать «Ричи мини» — делаем: составить смету (полный список комплектующих/материалов с ценами).\n2. Начать закупки по смете (что можно — сразу).\n\nДетали по проекту «Ричи мини» уточнять у Ники. Работать вместе с Лехой (@Alexey_alkogolniy, отдельная карточка). Прогресс по закупкам фиксировать в этой карточке.",
+       "status": "ready",
+       "assignee": "nilmayerlev",
+       "priority": 3,
+       "created_by": "default",
+       "created_at": 1793794618,
+       "completed_at": null,
+       "result": null,
+       "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
+       "comments": [],
        "runs": []
       }
      ]
@@ -509,6 +662,8 @@
        "completed_at": null,
        "result": null,
        "block_kind": "needs_input",
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -547,6 +702,8 @@
        "completed_at": 1793782205,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -579,6 +736,8 @@
        "completed_at": 1793553944,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "Лира",
@@ -611,6 +770,8 @@
        "completed_at": 1793734158,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -653,6 +814,8 @@
        "completed_at": 1793562821,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": [
         {
@@ -674,6 +837,8 @@
        "completed_at": 1793790329,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "Лира (крон)",
@@ -706,6 +871,8 @@
        "completed_at": 1793783266,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": [
         {
@@ -732,6 +899,8 @@
        "completed_at": 1793561966,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "auto-decomposer",
@@ -779,6 +948,8 @@
        "completed_at": 1793725495,
        "result": "Сделан первый шаг (изучено, схема ключей и инвалидации) и внедрён сам кэш в /home/laba/smart-lab-voice/speak.py: ключ = sha256(нормализованный текст + JSON конфига TTS); фразы ≤160 символов, ≤64 файлов (LRU по mtime), атомарная запись tmp→os.replace; промах = обычная генерация с записью в кэш; любой сбой кэша — fallback на прежний путь. Смена голоса/провайдера инвалидирует ключ автоматически (конфиг в ключе). Замер на реальной фразе: промах 9,7 с → попадание 2,2 с (остаток — конвертация в WAV и отправка на колонку). Юнит-тесты функций кэша пройдены (лимит длины, повторная запись, инвалидация по конфигу, LRU=64). Сервис не перезапускался (speak.py запускается заново на каждый ответ — правка живая), smart-lab-voice.service active, /health 200. Границы: кэш покрывает путь колонки/ESP; TG-голос идёт через TTS-пайплайн Hermes и не ускоряется. Конец-в-конец с реальным ESP не проверено (ESP выключен). Бекап прежнего speak.py: /home/laba/backups/soft/2026-11-04_00-03-26/. Заметка в vault: «Кэш фраз озвучки — установленное состояние», push 783409f.",
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -816,6 +987,8 @@
        "completed_at": 1793566691,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "Лира",
@@ -843,6 +1016,8 @@
        "completed_at": 1793569533,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "Лира",
@@ -870,6 +1045,8 @@
        "completed_at": 1793734155,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -912,6 +1089,8 @@
        "completed_at": 1793618157,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -954,6 +1133,8 @@
        "completed_at": 1793782319,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "niki",
@@ -991,6 +1172,8 @@
        "completed_at": 1793725326,
        "result": "Реализовано и проверено: esp-фразы из /lab/message получают префикс «🎤 » перед попаданием в чат/агента, cli — без префикса. Правка (02.11 04:43) в /home/laba/.hermes/plugins/smart-lab-bridge/__init__.py:359 + тест в test_bridge.py; юнит-тест пройден, гейтвей перезапущен после правки и работает с ней. Не проверено: реальный ESP (выключен) — при первом включении сравнить вид фраз в TG.",
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -1033,6 +1216,8 @@
        "completed_at": 1793725295,
        "result": "Система канбана готова: доски по всем проектам созданы (umnaia-laba + 8 досок проектов), TG-чат подписан на уведомления (было ранее). Правила («задача попадает на доску через Лиру», «итоги дублируются в заметки хранилища», fail-closed ночной диспетчер) зафиксированы в vault-заметке «Канбан — правила работы» и в навыке lab-kanban, push в main: 065578d. Профили-исполнители researcher/builder/reviewer НЕ создавал: Ники позже ограничил диспетчер dispatch_profiles=[default] — создание профилей противоречит этому решению; если понадобятся, нужна отдельная карточка.",
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "Лира",
@@ -1075,6 +1260,8 @@
        "completed_at": 1793559505,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -1102,6 +1289,8 @@
        "completed_at": 1793560125,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -1129,6 +1318,8 @@
        "completed_at": 1793561964,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -1161,6 +1352,8 @@
        "completed_at": 1793560784,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [
         {
          "author": "default",
@@ -1193,6 +1386,8 @@
        "completed_at": 1793734285,
        "result": null,
        "block_kind": null,
+       "deadline": null,
+       "deadline_ts": null,
        "comments": [],
        "runs": [
         {
