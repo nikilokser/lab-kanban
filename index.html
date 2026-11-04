@@ -11,8 +11,18 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-syste
 header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
 h1{font-size:16px;margin:0}
 .dim{color:var(--dim);font-size:12px}
-#helpbtn{margin-left:auto;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;flex:none}
+#helpbtn{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;flex:none}
 #helpbtn:hover{border-color:var(--accent)}
+.pnav{margin-left:auto;font-size:12px;white-space:nowrap}
+.pnav a{margin-left:12px}
+#gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9;padding:16px}
+#gatebox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px 22px;max-width:400px;width:100%}
+#gatebox h2{font-size:16px;margin:0 0 8px}
+#gatebox p{color:var(--dim);font-size:13px;margin:0 0 14px}
+#gatepw{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 12px;font:inherit;width:100%;box-sizing:border-box}
+#gateok{background:var(--panel2);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer;margin-top:10px;width:100%}
+#gateok:hover{background:#1e2f34}
+#gateerr{color:var(--warn);font-size:12.5px;margin-top:10px;min-height:16px}
 main{padding:14px 12px 30px}
 .board{margin-bottom:26px}
 .board h2{font-size:14px;margin:0 0 8px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
@@ -59,10 +69,17 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
 </style>
 </head>
 <body>
-<header><h1>Канбан лабы</h1><div class="dim" id="updated">загрузка…</div><button id="helpbtn" title="Что здесь означает" aria-label="Справка">?</button></header>
+<header><h1>Канбан лабы</h1><div class="dim" id="updated">загрузка…</div><nav class="pnav"><a href="lira.html">Резюме Лиры</a><a href="status.html">Статус</a><a href="links.html">Все ссылки</a></nav><button id="helpbtn" title="Что здесь означает" aria-label="Справка">?</button></header>
 <div id="filters"><select id="f-board"><option value="">Все проекты</option></select><select id="f-assignee"><option value="">Все исполнители</option></select><button id="f-done" title="показать/скрыть завершённые задачи">Завершённые</button><button id="f-reset" hidden>Сброс</button></div>
 <main id="content"><div class="dim">Загрузка…</div></main>
 <footer>Зеркало канбан-досок лаборатории · только чтение · обновляется автоматически</footer>
+<div id="gate"><div id="gatebox">
+  <h2>🔒 Канбан лабы</h2>
+  <p>Зеркало закрыто паролем: данные публикуются шифрованными, без пароля не читаются.</p>
+  <input id="gatepw" type="password" autocomplete="current-password" placeholder="пароль" autofocus>
+  <button id="gateok">Открыть</button>
+  <div id="gateerr"></div>
+</div></div>
 <div id="overlay"><div id="helpbox">
   <button class="close" id="helpclose">Закрыть</button>
   <h2>Что здесь означает</h2>
@@ -157,12 +174,38 @@ function autoPickUser(){
   const sel=document.getElementById('f-assignee');
   if(Array.prototype.some.call(sel.options,o=>o.value===target)){sel.value=target;window.__userPicked=true;render();}
 }
-fetch('data.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
-  DATA=data;
-  document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
-  render();
-  autoPickUser();
-}).catch(e=>{document.getElementById('content').innerHTML='<div class="err">Не удалось загрузить данные: '+esc(e.message)+'</div>'});
+async function decryptData(pw){
+  const r=await fetch('data.json.enc?t='+Date.now());
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const raw=new Uint8Array(await r.arrayBuffer());
+  if(new TextDecoder().decode(raw.slice(0,5))!=='LKAN1')throw new Error('неизвестный формат данных');
+  const salt=raw.slice(5,21),iv=raw.slice(21,33),ct=raw.slice(33);
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt,iterations:120000,hash:'SHA-256'},base,256);
+  const key=await crypto.subtle.importKey('raw',bits,'AES-GCM',false,['decrypt']);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+function openKanban(pw){
+  document.getElementById('gateerr').textContent='';
+  decryptData(pw).then(data=>{
+    sessionStorage.setItem('liraKanbanPw',pw);
+    DATA=data;
+    document.getElementById('updated').textContent='обновлено '+new Date(data.generated_at*1000).toLocaleString('ru-RU');
+    document.getElementById('gate').style.display='none';
+    render();
+    autoPickUser();
+  }).catch(e=>{
+    document.getElementById('gateerr').textContent=/OperationError|decrypt/.test(String(e))?'Неверный пароль.':'Не удалось загрузить данные: '+esc(e.message);
+  });
+}
+(function(){
+  const saved=sessionStorage.getItem('liraKanbanPw');
+  if(saved)openKanban(saved);
+  const inp=document.getElementById('gatepw');
+  document.getElementById('gateok').addEventListener('click',()=>openKanban(inp.value));
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')openKanban(inp.value)});
+})();
 const fmtFull=ts=>ts?new Date(ts*1000).toLocaleString('ru-RU'):'—';
 const resultText=t=>{const own=(t.result||'').trim();if(own)return own;const r=(t.runs||[]).find(r=>(r.summary||'').trim());return r?r.summary.trim():''};
 function closeTask(){document.getElementById('taskoverlay').classList.remove('open')}
