@@ -1,5 +1,5 @@
 {
- "generated_at": 1793782815,
+ "generated_at": 1793783715,
  "boards": [
   {
    "slug": "braille-printer",
@@ -429,33 +429,6 @@
      ]
     },
     {
-     "status": "blocked",
-     "title": "Заблокировано",
-     "tasks": [
-      {
-       "id": "t_cb0bdc19",
-       "title": "Дать laba право перезапускать системные юниты (polkit)",
-       "body": "## Зачем\nWatchdog самовосстановления (`/home/laba/.hermes/scripts/health_watchdog.py`, таймер health-watchdog.timer каждые 15 мин) умеет поднимать user-юниты (гейтвей, панели, голос), но системные юниты рестартовать не может: `systemctl restart <unit>` от laba упирается в polkit — Access denied.\n\nСейчас если ляжет один из системных юнитов, watchdog может только прислать сообщение — чинить их придётся вручную.\n\n## Что нужно (root, одна команда-файл)\nСоздать `/etc/polkit-1/rules.d/50-lab-restart.rules`:\n\n```javascript\npolkit.addRule(function(action, subject) {\n    if (action.id == \"org.freedesktop.systemd1.manage-units\" &&\n        subject.user == \"laba\" &&\n        [\"smart-lab-voice-stream.service\",\n         \"smart-lab-research-isolated.service\",\n         \"firecrawl-on-demand.service\"].includes(action.lookup(\"unit\"))) {\n        return polkit.Result.YES;\n    }\n});\n```\n\nПерезагрузка не нужна, polkit читает правила на лету.\n\n## Проверка\n- `systemctl restart smart-lab-research-isolated` от laba — должно пройти без ошибки (юнит поднимется, Restart=on-failure вернёт его в работу).\n- После этого watchdog при падении любого из трёх юнитов станет не только сообщать, но и поднимать его автоматически.\n",
-       "status": "blocked",
-       "assignee": "none",
-       "priority": 3,
-       "created_by": "user",
-       "created_at": 1793689769,
-       "completed_at": null,
-       "result": null,
-       "block_kind": "needs_input",
-       "comments": [],
-       "runs": [
-        {
-         "outcome": "blocked",
-         "summary": "Требуется разовая root-команда Ники: создать /etc/polkit-1/rules.d/50-lab-restart.rules (текст правила в карточке). После этого watchdog сможет сам поднимать системные юниты (smart-lab-voice-stream, research-isolated, firecrawl-on-demand).",
-         "ended_at": 1793734158
-        }
-       ]
-      }
-     ]
-    },
-    {
      "status": "done",
      "title": "Завершено",
      "tasks": [
@@ -583,6 +556,32 @@
          "outcome": "completed",
          "summary": "Канбан раскидан по проектам: созданы 8 досок (Сырок, Гиробот, Принтер Брайля, Фотобокс, LED-куб, Машинка, Сканер 3д, Нейроуправление) и перенесены 20 задач из сводки проектов и заметок (по каждой — тело с деталями и ссылкой на источник). Профиль-исполнитель niki создан. Интерфейс понятнее: на зеркале и в панели кнопка «?» с расшифровкой колонок/приоритетов/исполнителей, подписи humanized (Авто / Лира (ночь) / имена), подсказки при наведении. Зеркало переопубликовано и проверено в браузере (9 досок отображаются, справка работает), тесты панели OK.",
          "ended_at": 1793562821
+        }
+       ]
+      },
+      {
+       "id": "t_cb0bdc19",
+       "title": "Дать laba право перезапускать системные юниты (polkit)",
+       "body": "## Зачем\nWatchdog самовосстановления (`/home/laba/.hermes/scripts/health_watchdog.py`, таймер health-watchdog.timer каждые 15 мин) умеет поднимать user-юниты (гейтвей, панели, голос), но системные юниты рестартовать не может: `systemctl restart <unit>` от laba упирается в polkit — Access denied.\n\nСейчас если ляжет один из системных юнитов, watchdog может только прислать сообщение — чинить их придётся вручную.\n\n## Что нужно (root, одна команда-файл)\nСоздать `/etc/polkit-1/rules.d/50-lab-restart.rules`:\n\n```javascript\npolkit.addRule(function(action, subject) {\n    if (action.id == \"org.freedesktop.systemd1.manage-units\" &&\n        subject.user == \"laba\" &&\n        [\"smart-lab-voice-stream.service\",\n         \"smart-lab-research-isolated.service\",\n         \"firecrawl-on-demand.service\"].includes(action.lookup(\"unit\"))) {\n        return polkit.Result.YES;\n    }\n});\n```\n\nПерезагрузка не нужна, polkit читает правила на лету.\n\n## Проверка\n- `systemctl restart smart-lab-research-isolated` от laba — должно пройти без ошибки (юнит поднимется, Restart=on-failure вернёт его в работу).\n- После этого watchdog при падении любого из трёх юнитов станет не только сообщать, но и поднимать его автоматически.\n",
+       "status": "done",
+       "assignee": "none",
+       "priority": 3,
+       "created_by": "user",
+       "created_at": 1793689769,
+       "completed_at": 1793783266,
+       "result": null,
+       "block_kind": null,
+       "comments": [],
+       "runs": [
+        {
+         "outcome": "completed",
+         "summary": "Полкат на системе не установлен (демона нет вовсе), задача решена надёжнее: /etc/sudoers.d/z-lab-services — laba может без пароля рестартовать/стартовать smart-lab-voice-stream, smart-lab-research-isolated, firecrawl-on-demand и смотреть статус smart-lab-*.service. Проверено живьём: sudo -n systemctl restart voice-stream/research-isolated → exit=0, юниты активны. Watchdog обновлён: системные юниты теперь поднимает сам безпарольным рестартом (раньше только звал на помощь), прогон «всё живо».",
+         "ended_at": 1793783266
+        },
+        {
+         "outcome": "blocked",
+         "summary": "Требуется разовая root-команда Ники: создать /etc/polkit-1/rules.d/50-lab-restart.rules (текст правила в карточке). После этого watchdog сможет сам поднимать системные юниты (smart-lab-voice-stream, research-isolated, firecrawl-on-demand).",
+         "ended_at": 1793734158
         }
        ]
       },
