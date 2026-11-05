@@ -110,6 +110,7 @@ const fmt=ts=>{if(!ts)return'';const d=new Date(ts*1000);return d.toLocaleDateSt
 let DATA=null;
 const USER_MAP={'nikilokser':'niki'};
 const who=a=>a==='lira'?'Лира':(a==='default'?'Лира (ночь)':(a?a:'Без исполнителя'));
+const asgList=a=>(a||'').split(',').map(s=>s.trim()).filter(Boolean);
 /* Завершённая колонка скрыта по умолчанию — тоггл «Завершённые (N)». */
 let showDone=localStorage.getItem('kbShowDone')==='1';
 const dlBadge=t=>{
@@ -127,8 +128,10 @@ function fillSelect(id,pairs,allLabel){
 function uniqueAssignees(){
   const seen=new Set();const out=[];
   (DATA?DATA.boards:[]).forEach(b=>(b.columns||[]).forEach(c=>c.tasks.forEach(t=>{
-    if(t.error)return;const key=t.assignee||'';
-    if(!seen.has(key)){seen.add(key);out.push([key||'__nobody',who(key)]);}
+    if(t.error)return;
+    const list=asgList(t.assignee);
+    if(!list.length){ if(!seen.has('__nobody')){seen.add('__nobody');out.push(['__nobody','Без исполнителя']);} return; }
+    list.forEach(a=>{ if(!seen.has(a)){seen.add(a);out.push([a,who(a)]);} });
   })));
   out.sort((a,b)=>a[1].localeCompare(b[1],'ru'));
   return out;
@@ -143,7 +146,7 @@ function render(){
   document.getElementById('f-reset').hidden=!fb&&!faraw;
   let boards=DATA.boards;
   if(fb)boards=boards.filter(b=>b.slug===fb);
-  if(faraw)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>(t.assignee||'')===fa)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
+  if(faraw)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>fa?asgList(t.assignee).includes(fa):!asgList(t.assignee).length)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
   const doneCount=boards.reduce((n,b)=>n+(b.columns||[]).filter(c=>c.status==='done').reduce((m,c)=>m+c.tasks.length,0),0);
   const db=document.getElementById('f-done');
   db.textContent='Завершённые ('+doneCount+')';
@@ -154,7 +157,7 @@ function render(){
     const cols=b.columns.filter(c=>showDone||c.status!=='done').map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
       c.tasks.map(t=>{window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
         return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
-        '<div class="meta">'+(t.assignee&&t.assignee!=='default'?'<span title="исполнитель">'+esc(who(t.assignee))+'</span>':'')+
+        '<div class="meta">'+(t.assignee&&!(asgList(t.assignee).length===1&&asgList(t.assignee)[0]==='default')?asgList(t.assignee).map(a=>'<span title="исполнитель">'+esc(who(a))+'</span>').join(' '):'')+
         dlBadge(t)+
         (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
         (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
@@ -220,7 +223,7 @@ function openTask(id){
     '<h2>'+esc(t.title||'—')+'</h2>'+
     '<div class="row"><span class="k">Доска</span><span class="v">'+esc(t._board||'—')+'</span></div>'+
     '<div class="row"><span class="k">Статус</span><span class="v">'+esc(t._status||t.status||'—')+'</span></div>'+
-    '<div class="row"><span class="k">Исполнитель</span><span class="v">'+esc(who(t.assignee))+'</span></div>'+
+    '<div class="row"><span class="k">Исполнитель</span><span class="v">'+(asgList(t.assignee).map(a=>esc(who(a))).join(', ')||'Без исполнителя')+'</span></div>'+
     '<div class="row"><span class="k">Приоритет</span><span class="v">'+(t.priority?'P'+esc(t.priority):'—')+'</span></div>'+
     '<div class="row"><span class="k">Дедлайн</span><span class="v">'+(t.deadline?esc(t.deadline):'—')+'</span></div>'+
     '<div class="row"><span class="k">Кто завёл</span><span class="v">'+esc(t.created_by||'—')+'</span></div>'+
