@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Сырок — хронология развития</title><style>
+:root{--bg:#10171a;--panel:#172226;--panel2:#1d2b30;--line:#26383e;--text:#d9e6e9;--dim:#7f979d;--accent:#87d8b0;--pc:#e9b978}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:14.5px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:40px 18px 56px}
+h1{font-size:22px;margin:0 0 4px}.sub{color:var(--dim);font-size:13px;margin-bottom:22px}
+h2{font-size:11.5px;color:var(--dim);margin:26px 0 10px;text-transform:uppercase;letter-spacing:.06em}
+.sum{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:6px}
+.sum b{font-size:15px}.sum .st{font-size:12.5px;color:var(--dim)}.sum .st b{color:var(--accent);font-size:13px}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.kv span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:12px;color:var(--dim)}
+.kv span b{color:var(--text);font-weight:600}
+.track{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px 4px}
+.mile{display:grid;grid-template-columns:96px 34px 1fr;gap:0 12px;position:relative;padding-bottom:16px}
+.mile:last-child{padding-bottom:8px}
+.mile .when{text-align:right;font-size:11.5px;color:var(--dim);padding-top:4px}
+.mile .when b{display:block;color:var(--text);font-weight:600;font-size:12.5px}
+.mile .axis{position:relative;display:flex;justify-content:center}
+.mile .axis::before{content:'';position:absolute;top:-16px;bottom:-16px;width:2.5px;background:var(--line)}
+.mile:first-child .axis::before{top:6px}
+.mile:last-child .axis::before{bottom:auto;height:24px}
+.mile .node{width:22px;height:22px;border-radius:50%;background:var(--panel2);border:2px solid var(--line);z-index:1;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10.5px;color:var(--dim);font-weight:700}
+.mile.done .node{background:var(--pc);border-color:var(--pc);color:#0d1517}
+.mile.cur .node{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 5px rgba(135,216,176,.16);width:24px;height:24px}
+.mile .body{padding-bottom:2px}
+.mile .t{font-size:13.5px;font-weight:600}
+.mile.cur .t{color:var(--accent)}
+.mile .d{font-size:12px;color:var(--dim)}
+.commits{margin:7px 0 0;padding:0;list-style:none}
+.commits li{font-size:11.5px;color:var(--dim);padding:2px 0;border:0}
+.commits .sha{font-family:ui-monospace,Consolas,monospace;color:var(--pc);font-weight:600}
+.tag{display:inline-block;margin-left:8px;padding:0 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;color:var(--dim);vertical-align:1px}
+.tag.now{color:var(--accent);border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:1fr;gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--pc);border-radius:12px;padding:11px 14px;font-size:13px}
+.card b{font-weight:600}
+.card .why{color:var(--dim);font-size:12px;margin-top:3px}
+.foot{margin-top:30px;color:#7b8f88;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+a{color:var(--accent)}
+@media(max-width:640px){.mile{grid-template-columns:64px 30px 1fr}}
+</style></head><body>
+<div class="wrap">
+  <h1>Сырок — хронология развития</h1>
+  <p class="sub">Учебный автономный квадрокоптер 3&quot; на ESP32. Таймлайн вех, коммитов базы знаний и архитектурных решений. Обновляется вручную, источник — vault лабы.</p>
+
+  <div class="sum">
+    <div class="st">Сейчас: <b>доводка стабильного полёта + проектирование «Сырок-Лайт»</b></div>
+    <div class="st" style="margin-left:auto">ветка: <b>v0.2</b></div>
+  </div>
+  <div class="kv">
+    <span>прототип: <b>75 г</b></span>
+    <span>газ висения: <b>0.58</b></span>
+    <span>тяга: <b>~129 г</b></span>
+    <span>TWR: <b>≈ 1.7</b></span>
+    <span>рама v0.2: <b>6,7 г</b></span>
+  </div>
+
+  <h2>Таймлайн</h2>
+  <div class="track">
+
+    <div class="mile done">
+      <div class="when"><b>23.09.2026</b>старт проекта</div>
+      <div class="axis"><div class="node">1</div></div>
+      <div class="body"><div class="t">Концепция «Сырок»</div>
+      <div class="d">Линейка из двух дронов: <b>Сырок-Лайт</b> — опенсорс на коллекторных моторах, конструктор для обучения; <b>Сырок-Про</b> — готовое решение на БК-моторах со своей платой. Контроллер ESP32-S3, optical flow у обоих. Конкуренты для сравнения: «Пионер мини», DJI Tello.</div></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>октябрь 2026</b>прототип</div>
+      <div class="axis"><div class="node">2</div></div>
+      <div class="body"><div class="t">Прототип собран и летает</div>
+      <div class="d">Сборка на WEMOS/ESP32, щёточные моторы 8520, своя силовая плата «Сверх» (N-MOSFET 100N03A). Прошивка — собственный форк flix. Первые тестовые висы.</div></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>17.10.2026</b>база знаний</div>
+      <div class="axis"><div class="node">3</div></div>
+      <div class="body"><div class="t">Проект перенесён в Obsidian-vault</div>
+      <div class="d">Стандарт страницы проекта, журнал разработки, все заметки Сырка в git (obsidian-laba). Дальше история ведётся коммитами.</div>
+      <ul class="commits"><li><span class="sha">f090e6e</span> Стандарт страницы проекта · <span class="sha">bab4a90</span> порядок: frontmatter, связи, журнал</li></ul></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>04.11.2026</b>рама</div>
+      <div class="axis"><div class="node">4</div></div>
+      <div class="body"><div class="t">Исследование: жёсткость рамы и качество полёта</div>
+      <div class="d">Масса и спектр резонансов важнее абсолютной жёсткости. Разбор BetaFPV Air65: рама 2,67 г из PP-композита, «плавающий» FC. Для Сырка: жёсткость в посадках моторов и базе FC+MTF-02, flex в держателях FC; дугу POS_HOLD лечить компенсацией рычага датчика + notch по измеренному спектру.</div>
+      <ul class="commits"><li><span class="sha">0d0bad7</span> Жёсткость рамы — влияние на полёт</li></ul></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>05.11.2026</b>материал</div>
+      <div class="axis"><div class="node">5</div></div>
+      <div class="body"><div class="t">Материал рамы: полипропилен</div>
+      <div class="d">Обзор PP-филамента: PP 0,90 г/см³ — самый лёгкий печатный пластик, гнётся, гасит вибрации. В РФ палитра только белый/натуральный/чёрный — цвет решается канопи из PETG. Идея двухпозиционной камеры (вперёд ↔ вниз) на приводе.</div>
+      <ul class="commits"><li><span class="sha">7aa3ced</span> Обзор PP-филамента · <span class="sha">6afd42d</span> идея двухпозиционной камеры</li></ul></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>06.11.2026</b>референсы</div>
+      <div class="axis"><div class="node">6</div></div>
+      <div class="body"><div class="t">Референсы: Tello и ESP32-дроны</div>
+      <div class="d">Разбор DJI Tello (4 версии, EDU — кандидат на покупку; UDP SDK 8889/8890/11111 как образец API для образовательного дрона). Запущен регулярный мониторинг живых проектов дронов на ESP32 (SparrowFlight и др.) — что перенять в Сырок.</div>
+      <ul class="commits"><li><span class="sha">34607e3</span> Tello — версии и отличия · <span class="sha">bee25bc</span> накопитель ESP32-дронов</li></ul></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>07.11.2026</b>замеры</div>
+      <div class="axis"><div class="node">7</div></div>
+      <div class="body"><div class="t">Позиционирование и первые честные замеры</div>
+      <div class="d">Сырок — <b>автономный образовательный дрон, не FPV</b>. Идея pusher-конфигурации (моторы вниз). Замеры Никитки: полётная масса ~75 г, газ висения 0.58.</div>
+      <ul class="commits"><li><span class="sha">192ac2c</span> «не FPV» везде · <span class="sha">26e364d</span> pusher-идея · <span class="sha">31a2d8d</span> масса 75 г</li></ul></div>
+    </div>
+
+    <div class="mile done">
+      <div class="when"><b>08.11.2026</b>Лайт</div>
+      <div class="axis"><div class="node">8</div></div>
+      <div class="body"><div class="t">Полная тяга и поворот к «Сырок-Лайт»</div>
+      <div class="d">Тяга ~129 г → TWR ≈ 1,7. Кандидат моторов Лайта — высокооборотные 615 (класс ESP-FLY: ~17 г тяги, 25-г дрон). MOSFET: SI2300 допустим для 615. Собрана смета закупок. Стендовая программа: тензодатчик YZC-133+HX711, гимбал на привязи, идея стендового дрона с раздельным измерением тока по моторам.</div>
+      <ul class="commits"><li><span class="sha">441461c</span> TWR 1,7 · <span class="sha">296b2af</span> 615-моторы · <span class="sha">42b334c</span> SI2300 · <span class="sha">7019372</span> стендовый дрон с токами</li></ul></div>
+    </div>
+
+    <div class="mile cur">
+      <div class="when"><b>09.11.2026</b>сейчас</div>
+      <div class="axis"><div class="node">→</div></div>
+      <div class="body"><div class="t">Рама v0.2 — почти вдвое легче <span class="tag now">мы здесь</span></div>
+      <div class="d">Рама v0.2 весит <b>6,7 г</b> против 13 г у v0.1 (−48%). Следующие шаги: стендовые измерения силового каскада, компенсация тяги, прототип Лайта на ESP32-S3 SuperMini.</div>
+      <ul class="commits"><li><span class="sha">f5a50de</span> рама v0.2 6,7 г · <span class="sha">97fcfd2</span> v0.1 13 г · <span class="sha">ea25ab8</span> flix-мониторинг в vault</li></ul></div>
+    </div>
+
+  </div>
+
+  <h2>Архитектурные решения</h2>
+  <div class="cards">
+    <div class="card"><b>Прошивка — собственный форк flix (syrok_lite)</b><div class="why">Свои optical flow (MTF-02), POS_HOLD, автопосадка и навигация, микшер с приоритетами, коррекция наклона, исправления защит и переходов режимов. Апстрим flix мониторится кроном ежечасно — полезное отбирается в заметку «flix — апстрим-коммиты и что внедрять».</div></div>
+    <div class="card"><b>Автономный образовательный дрон, не FPV</b><div class="why">Камера — обзор с борта и vision-задачи, не видеотракт. Вся терминология проекта выверена под это (07.11.2026).</div></div>
+    <div class="card"><b>Электроника Лайта: ESP32-S3 SuperMini</b><div class="why">IMU на SPI (не I2C — циклы 1–8 кГц и джиттер критичны), MTF-02 и ELRS на UART, делитель АКБ на ADC1 (GPIO9 — при Wi-Fi жив только ADC1), ToF-датчик — опция на I2C. INA226 на борту нет — измерение тока только на стенде. Питание логики 3,3 В: buck-boost по умолчанию, для Лайта рассматривается LDO с жёсткой автопосадкой при 3,7 В под нагрузкой + LiHV.</div></div>
+    <div class="card"><b>Моторы: 8520 → 615 для Лайта</b><div class="why">Сейчас 8520 (~32 г тяги на мотор в сборке 75 г). Для Лайта (≤45 г, цель ≤35 г) — высокооборотные 615 ~70k rpm (~17 г тяги, класс ESP-FLY), 716 как альтернатива. Время полёта ~ масса^1,5: 75→40 г даёт ×2,5–2,9.</div></div>
+    <div class="card"><b>Силовой каскад: N-MOSFET + Шоттки</b><div class="why">Сейчас 100N03A; SS34 обязателен (body diode). SI2300 допустим для 615, PMV16XN/IRLML6244 предпочтительнее. Причина потери тяги не подтверждена осциллографом — сравнение ШИМ 16/32/78 кГц и диоды на тензостенде.</div></div>
+    <div class="card"><b>Рама: PP + PETG-канопи</b><div class="why">PP (LEGA RUBBER) — 0,90 г/см³, гнётся, гасит вибрации (как у Air65); цвет — канопи из светло-голубого PETG. Рама v0.2 = 6,7 г, путь дальше — 3 г Air65-класса на меньшей базе.</div></div>
+    <div class="card"><b>Стендовая программа</b><div class="why">Тензодатчик YZC-133 + HX711 (30–55 г на мотор); гимбал на привязи (1 DoF → 3 DoF → свободный полёт): PID-настройка и диагностика без полётов; стендовый дрон с раздельным измерением тока по моторам (INA226/шунты) — честное сравнение 8520 vs 615 vs 716 и поиск «слабого» мотора. POS_HOLD по optical flow на привязи не тестируется (yaw «двигает» пол для флоу).</div></div>
+  </div>
+
+  <h2>Открытые вопросы</h2>
+  <div class="cards">
+    <div class="card"><b>POS_HOLD уходит по дуге после поворота</b><div class="why">Гипотеза: рычаг MTF-02 от центра + вихрь от пропов. Лечение: компенсация рычага + notch-фильтр по измеренному спектру вибраций.</div></div>
+    <div class="card"><b>Потеря тяги</b><div class="why">Обратные диоды на моторах не подтверждены осциллографом; сравнение ШИМ 16/32/78 кГц запланировано на тензостенде.</div></div>
+    <div class="card"><b>Нет измерения батареи и компенсации тяги</b><div class="why">Делитель на ADC + компенсация падения напряжения по мере разряда, посадка при разряде. Связь Wi-Fi после arm — проверить.</div></div>
+  </div>
+
+  <div class="foot">
+    <span><a href="roadmap.html">Роадмапы всех проектов</a></span>
+    <span>источник: vault лабы (obsidian-laba), раздел «Проекты/Сырок»</span>
+    <span>обновлено 09.11.2026</span>
+  </div>
+</div>
+</body></html>
