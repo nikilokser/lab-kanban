@@ -3,13 +3,22 @@
 :root{--bg:#10171a;--panel:#172226;--panel2:#1d2b30;--line:#26383e;--text:#d9e6e9;--dim:#7f979d;--accent:#87d8b0;--pc:#e9b978}
 *{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:14.5px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;margin:0}
 .wrap{max-width:760px;margin:0 auto;padding:40px 18px 56px}
-h1{font-size:22px;margin:0 0 4px}.sub{color:var(--dim);font-size:13px;margin-bottom:22px}
+h1{font-size:22px;margin:0 0 4px}.sub{color:var(--dim);font-size:13px;margin-bottom:18px}
 h2{font-size:11.5px;color:var(--dim);margin:26px 0 10px;text-transform:uppercase;letter-spacing:.06em}
+/* --- вкладки --- */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px;margin:0 -4px 18px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 15px;font-size:12.5px;color:var(--dim);cursor:pointer;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.on{background:var(--panel2);border-color:var(--accent);color:var(--accent);font-weight:600}
+.view{display:none}.view.on{display:block}
+/* --- сводка --- */
 .sum{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:6px}
 .sum b{font-size:15px}.sum .st{font-size:12.5px;color:var(--dim)}.sum .st b{color:var(--accent);font-size:13px}
 .kv{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
 .kv span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:12px;color:var(--dim)}
 .kv span b{color:var(--text);font-weight:600}
+/* --- таймлайн --- */
 .track{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px 4px}
 .mile{display:grid;grid-template-columns:96px 34px 1fr;gap:0 12px;position:relative;padding-bottom:16px}
 .mile:last-child{padding-bottom:8px}
@@ -31,16 +40,25 @@ h2{font-size:11.5px;color:var(--dim);margin:26px 0 10px;text-transform:uppercase
 .commits .sha{font-family:ui-monospace,Consolas,monospace;color:var(--pc);font-weight:600}
 .tag{display:inline-block;margin-left:8px;padding:0 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;color:var(--dim);vertical-align:1px}
 .tag.now{color:var(--accent);border-color:var(--accent)}
+/* --- карточки --- */
 .cards{display:grid;grid-template-columns:1fr;gap:10px}
 .hw{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--pc);border-radius:12px;padding:11px 14px;font-size:13px}
 .card b{font-weight:600}
 .card .why{color:var(--dim);font-size:12px;margin-top:3px}
-.log{margin-top:6px}
-.day{font-size:12.5px;font-weight:700;color:var(--pc);margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line);letter-spacing:.02em}
-.day small{font-weight:400;color:var(--dim);letter-spacing:0}
-.log ul{margin:0;padding:0;list-style:none}
-.log li{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin-bottom:8px;font-size:12.5px;line-height:1.5}
+/* --- журнал --- */
+.month{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:20px 0 8px}
+.log details{background:var(--panel);border:1px solid var(--line);border-radius:11px;margin-bottom:8px;overflow:hidden}
+.log summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:12.5px;user-select:none}
+.log summary::-webkit-details-marker{display:none}
+.log summary .day{color:var(--pc);font-weight:700;font-size:12.5px;letter-spacing:.02em}
+.log summary .hint{color:var(--dim);margin-left:10px;font-size:12px}
+.log summary .chev{float:right;color:var(--dim);font-size:11px;margin-top:1px}
+.log details[open] summary .chev::before{content:'▾'}
+.log summary .chev::before{content:'▸'}
+.log details[open] summary{border-bottom:1px solid var(--line)}
+.log ul{margin:6px 10px 10px;padding:0;list-style:none}
+.log li{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 12px;margin-bottom:7px;font-size:12.5px;line-height:1.5}
 .log li b{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
 .log li .d{color:var(--dim)}
 .foot{margin-top:30px;color:#7b8f88;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -49,215 +67,264 @@ a{color:var(--accent)}
 </style></head><body>
 <div class="wrap">
   <h1>Сырок — хронология развития</h1>
-  <p class="sub">Учебный автономный квадрокоптер 3&quot; на ESP32. Вехи проекта и подробный журнал работ по датам. Источники: vault лабы (obsidian-laba) и рабочий журнал Сырка (status.md, Никитка). Обновляется вручную.</p>
+  <p class="sub">Учебный автономный квадрокоптер 3&quot; на ESP32. Источники: vault лабы (obsidian-laba) и рабочий журнал Сырка (status.md, Никитка). Обновляется вручную. Вкладки переключаются кликом; ссылка с хешем (#zhelezo, #zhurnal, #resheniya, #voprosy) открывает нужную сразу.</p>
 
-  <div class="sum">
-    <div class="st">Сейчас: <b>борьба с вертикальными прыжками POS_HOLD (~1.7 Гц) + проектирование «Сырок-Лайт»</b></div>
-    <div class="st" style="margin-left:auto">рама: <b>v0.2</b></div>
-  </div>
-  <div class="kv">
-    <span>прототип: <b>75 г</b></span>
-    <span>газ висения: <b>0.58–0.59</b></span>
-    <span>тяга: <b>~129 г</b></span>
-    <span>TWR: <b>≈ 1.7</b></span>
-    <span>рама v0.2: <b>6,7 г</b></span>
-    <span>моторы: <b>8520, пропы 65 мм</b></span>
-    <span>аккум: <b>1S LiHV 260 мА·ч, BT2.0</b></span>
-  </div>
+  <nav class="tabs">
+    <div class="tab on" data-id="overview">Обзор</div>
+    <div class="tab" data-id="zhelezo">Железо</div>
+    <div class="tab" data-id="zhurnal">Журнал работ</div>
+    <div class="tab" data-id="resheniya">Решения</div>
+    <div class="tab" data-id="voprosy">Открытые вопросы</div>
+  </nav>
 
-  <h2>Таймлайн вех</h2>
-  <div class="track">
-
-    <div class="mile done">
-      <div class="when"><b>23.09.2026</b>старт проекта</div>
-      <div class="axis"><div class="node">1</div></div>
-      <div class="body"><div class="t">Концепция «Сырок»</div>
-      <div class="d">Линейка из двух дронов: <b>Сырок-Лайт</b> — опенсорс на коллекторных моторах, конструктор для обучения; <b>Сырок-Про</b> — готовое решение на БК-моторах со своей платой. Контроллер ESP32-S3, optical flow у обоих. Конкуренты для сравнения: «Пионер мини», DJI Tello.</div></div>
+  <section class="view on" id="overview">
+    <div class="sum">
+      <div class="st">Сейчас: <b>борьба с вертикальными прыжками POS_HOLD (~1.7 Гц) + проектирование «Сырок-Лайт»</b></div>
+      <div class="st" style="margin-left:auto">рама: <b>v0.2</b></div>
+    </div>
+    <div class="kv">
+      <span>прототип: <b>75 г</b></span>
+      <span>газ висения: <b>0.58–0.59</b></span>
+      <span>тяга: <b>~129 г</b></span>
+      <span>TWR: <b>≈ 1.7</b></span>
+      <span>рама v0.2: <b>6,7 г</b></span>
+      <span>моторы: <b>8520, пропы 65 мм</b></span>
+      <span>аккум: <b>1S LiHV 260 мА·ч, BT2.0</b></span>
     </div>
 
-    <div class="mile done">
-      <div class="when"><b>октябрь 2026</b>прототип</div>
-      <div class="axis"><div class="node">2</div></div>
-      <div class="body"><div class="t">Прототип собран и летает</div>
-      <div class="d">Сборка на WEMOS/ESP32, щёточные моторы 8520, своя силовая плата «Сверх» (N-MOSFET 100N03A). Прошивка — собственный форк flix. Первые тестовые висы.</div></div>
+    <h2>Таймлайн вех</h2>
+    <div class="track">
+
+      <div class="mile done">
+        <div class="when"><b>23.09.2026</b>старт проекта</div>
+        <div class="axis"><div class="node">1</div></div>
+        <div class="body"><div class="t">Концепция «Сырок»</div>
+        <div class="d">Линейка из двух дронов: <b>Сырок-Лайт</b> — опенсорс на коллекторных моторах, конструктор для обучения; <b>Сырок-Про</b> — готовое решение на БК-моторах со своей платой. Контроллер ESP32-S3, optical flow у обоих. Конкуренты для сравнения: «Пионер мини», DJI Tello.</div></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>октябрь 2026</b>прототип</div>
+        <div class="axis"><div class="node">2</div></div>
+        <div class="body"><div class="t">Прототип собран и летает</div>
+        <div class="d">Сборка на WEMOS/ESP32, щёточные моторы 8520, своя силовая плата «Сверх» (N-MOSFET 100N03A). Прошивка — собственный форк flix. Первые тестовые висы.</div></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>17.10.2026</b>база знаний</div>
+        <div class="axis"><div class="node">3</div></div>
+        <div class="body"><div class="t">Проект перенесён в Obsidian-vault</div>
+        <div class="d">Стандарт страницы проекта, журнал разработки, все заметки Сырка в git (obsidian-laba). Дальше история ведётся коммитами.</div>
+        <ul class="commits"><li><span class="sha">f090e6e</span> Стандарт страницы проекта · <span class="sha">bab4a90</span> порядок: frontmatter, связи, журнал</li></ul></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>04.11.2026</b>рама</div>
+        <div class="axis"><div class="node">4</div></div>
+        <div class="body"><div class="t">Исследование: жёсткость рамы и качество полёта</div>
+        <div class="d">Масса и спектр резонансов важнее абсолютной жёсткости. Разбор BetaFPV Air65: рама 2,67 г из PP-композита, «плавающий» FC. Для Сырка: жёсткость в посадках моторов и базе FC+MTF-02, flex в держателях FC; дугу POS_HOLD лечить компенсацией рычага датчика + notch по измеренному спектру.</div>
+        <ul class="commits"><li><span class="sha">0d0bad7</span> Жёсткость рамы — влияние на полёт</li></ul></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>05.11.2026</b>материал</div>
+        <div class="axis"><div class="node">5</div></div>
+        <div class="body"><div class="t">Материал рамы: полипропилен</div>
+        <div class="d">Обзор PP-филамента: PP 0,90 г/см³ — самый лёгкий печатный пластик, гнётся, гасит вибрации. В РФ палитра только белый/натуральный/чёрный — цвет решается канопи из PETG. Идея двухпозиционной камеры (вперёд ↔ вниз) на приводе.</div>
+        <ul class="commits"><li><span class="sha">7aa3ced</span> Обзор PP-филамента · <span class="sha">6afd42d</span> идея двухпозиционной камеры</li></ul></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>06.11.2026</b>референсы</div>
+        <div class="axis"><div class="node">6</div></div>
+        <div class="body"><div class="t">Референсы: Tello и ESP32-дроны</div>
+        <div class="d">Разбор DJI Tello (4 версии, EDU — кандидат на покупку; UDP SDK 8889/8890/11111 как образец API для образовательного дрона). Запущен регулярный мониторинг живых проектов дронов на ESP32 (SparrowFlight и др.) — что перенять в Сырок.</div>
+        <ul class="commits"><li><span class="sha">34607e3</span> Tello — версии и отличия · <span class="sha">bee25bc</span> накопитель ESP32-дронов</li></ul></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>07.11.2026</b>замеры</div>
+        <div class="axis"><div class="node">7</div></div>
+        <div class="body"><div class="t">Позиционирование и первые честные замеры</div>
+        <div class="d">Сырок — <b>автономный образовательный дрон, не FPV</b>. Идея pusher-конфигурации (моторы вниз). Замеры Никитки: полётная масса ~75 г, газ висения 0.58.</div>
+        <ul class="commits"><li><span class="sha">192ac2c</span> «не FPV» везде · <span class="sha">26e364d</span> pusher-идея · <span class="sha">31a2d8d</span> масса 75 г</li></ul></div>
+      </div>
+
+      <div class="mile done">
+        <div class="when"><b>08.11.2026</b>Лайт</div>
+        <div class="axis"><div class="node">8</div></div>
+        <div class="body"><div class="t">Полная тяга и поворот к «Сырок-Лайт»</div>
+        <div class="d">Тяга ~129 г → TWR ≈ 1,7. Кандидат моторов Лайта — высокооборотные 615 (класс ESP-FLY: ~17 г тяги, 25-г дрон). MOSFET: SI2300 допустим для 615. Собрана смета закупок. Стендовая программа: тензодатчик YZC-133+HX711, гимбал на привязи, идея стендового дрона с раздельным измерением тока по моторам.</div>
+        <ul class="commits"><li><span class="sha">441461c</span> TWR 1,7 · <span class="sha">296b2af</span> 615-моторы · <span class="sha">42b334c</span> SI2300 · <span class="sha">7019372</span> стендовый дрон с токами</li></ul></div>
+      </div>
+
+      <div class="mile cur">
+        <div class="when"><b>10.11.2026</b>сейчас</div>
+        <div class="axis"><div class="node">→</div></div>
+        <div class="body"><div class="t">Рама v0.2 напечатана — почти вдвое легче <span class="tag now">мы здесь</span></div>
+        <div class="d">Рама v0.2 весит <b>6,7 г</b> против 13 г у v0.1 (−48%). Полную массу в сборе с новой рамой и моторами props-in ещё не перевешивали. Параллельно — доводка стабильного висения: готова (не залита) сборка с переключаемой вертикальной обратной связью CTL_ALT_FUSION, ждёт полётной проверки на обновлённой раме.</div>
+        <ul class="commits"><li><span class="sha">f5a50de</span> рама v0.2 6,7 г · <span class="sha">97fcfd2</span> v0.1 13 г · <span class="sha">ea25ab8</span> flix-мониторинг в vault</li></ul></div>
+      </div>
+
     </div>
+    <p class="sub" style="margin-top:14px">Подробности каждого дня — во вкладке <a href="#zhurnal">Журнал работ</a>, железо во вкладке <a href="#zhelezo">Железо</a>.</p>
+  </section>
 
-    <div class="mile done">
-      <div class="when"><b>17.10.2026</b>база знаний</div>
-      <div class="axis"><div class="node">3</div></div>
-      <div class="body"><div class="t">Проект перенесён в Obsidian-vault</div>
-      <div class="d">Стандарт страницы проекта, журнал разработки, все заметки Сырка в git (obsidian-laba). Дальше история ведётся коммитами.</div>
-      <ul class="commits"><li><span class="sha">f090e6e</span> Стандарт страницы проекта · <span class="sha">bab4a90</span> порядок: frontmatter, связи, журнал</li></ul></div>
+  <section class="view" id="zhelezo">
+    <h2>Текущее железо</h2>
+    <div class="hw">
+      <div class="card"><b>Силовая установка</b><div class="why">Моторы 8520 coreless, пропеллеры 65 мм, диоды SS34 на моторах. ШИМ 32 кГц / 10 бит — звук и плавность тяги лучше, чем на 98 кГц/9 бит. Схема вращения — props-in (MOT_SPIN_OUT=0, с 09.11).</div></div>
+      <div class="card"><b>Батарея и масса</b><div class="why">1S LiHV 260 мА·ч, разъём BT2.0, толстые провода питания (с 05.11). Полётная масса с аккумом — 75 г (прежде ~90 г со старой батареей), газ висения 0.58–0.59. Аккум 7 г, по центру в нижнем отсеке, без фиксатора. Испытание 550 мА·ч — впереди.</div></div>
+      <div class="card"><b>Рама</b><div class="why">v0.2 напечатана 10.11 — <b>6,7 г</b> (v0.1 — 13 г). База между центрами валов: 98 мм слева–справа, 67 мм спереди–сзади (замер 06.11). Полную массу в сборе с новой рамой и заменёнными моторами ещё не перевешивали.</div></div>
+      <div class="card"><b>Датчики</b><div class="why">IMU MPU6050 по I2C (DLPF 98 Гц); optical flow + дальномер MTF-02P на Serial2 — MAVLink с 20.10, старый MSP тоже поддерживается. Измерение батареи: делитель 10k/10k на IO32, PWR_VOLT_SCALE 1.975; в полётах 3.45–3.77 В под нагрузкой.</div></div>
+      <div class="card"><b>Управление и связь</b><div class="why">BetaFPV LiteRadio 3 по USB как джойстик в QGroundControl (пульт подключать выключенным, иначе оси не работают). Kill switch — кнопки QGC_SW1_LO/HI (6/7). Wi-Fi в режиме клиента — дрон в локальной сети, прошивка по OTA; USB на ПК — COM15. SBUS не используется.</div></div>
     </div>
+  </section>
 
-    <div class="mile done">
-      <div class="when"><b>04.11.2026</b>рама</div>
-      <div class="axis"><div class="node">4</div></div>
-      <div class="body"><div class="t">Исследование: жёсткость рамы и качество полёта</div>
-      <div class="d">Масса и спектр резонансов важнее абсолютной жёсткости. Разбор BetaFPV Air65: рама 2,67 г из PP-композита, «плавающий» FC. Для Сырка: жёсткость в посадках моторов и базе FC+MTF-02, flex в держателях FC; дугу POS_HOLD лечить компенсацией рычага датчика + notch по измеренному спектру.</div>
-      <ul class="commits"><li><span class="sha">0d0bad7</span> Жёсткость рамы — влияние на полёт</li></ul></div>
+  <section class="view" id="zhurnal">
+    <h2>Журнал работ — по датам</h2>
+    <div class="log">
+
+      <div class="month">Ноябрь 2026</div>
+
+      <details open>
+        <summary><span class="day">2026-11-10</span><span class="hint">рама v0.2 — 6,7 г</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Напечатана облегчённая рама 6,7 г</b><span class="d">Новая рама v0.2. Полную массу в сборе с новой рамой и недавно заменёнными моторами props-in ещё не перевешивали. Заливка подготовленной сборки с переключаемой вертикальной обратной связью (CTL_ALT_FUSION) отложена до готовности к полётной проверке на обновлённой раме.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-11-09</span><span class="hint">props-in · HOV 0.59 · ШИМ 32 кГц · теневой оцениватель · флип rev:10</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Моторы переведены на props-in</b><span class="d">Замена моторов на партию с вращением внутрь. С оставшимся MOT_SPIN_OUT=1 (наружу) — мгновенная раскрутка по курсу до +465°/с; в прошивку добавлен параметр MOT_SPIN_OUT (0 — внутрь, 1 — наружу), схема исправлена, раскрутка ушла. Газ висения на новой паре: 0.587–0.594 → HOV=0.59.</span></li>
+          <li><b>POS_HOLD на новых моторах: база тяги совпала, прыжки остались</b><span class="d">Медиана тяги висения 0.592 при базе 0.590, дрейфа по высоте нет, но вертикальная раскачка ~1.7 Гц сохраняется (СКО высоты 2,75 см, размах p05–p95 9 см).</span></li>
+          <li><b>Диагностика вертикального контура</b><span class="d">LOG_PROFILE=1: впервые записаны все 6 слагаемых каскада высоты. На каждом сантиметре дальномера связка altZ.D → altV.P даёт мгновенную ступень тяги 0.132. Тест CTL_ALT_Z_D 0.18→0.09: импульс тяги −36%, физические прыжки не исчезли.</span></li>
+          <li><b>ШИМ: выбраны 32 кГц / 10 бит</b><span class="d">98 кГц / 9 бит — газ висения вырос до 0.74 и звук моторов хуже; 32 кГц / 10 бит — тяга висения 0.635–0.642, звук и плавность заметно лучше. Оставлено 32 кГц / 10 бит.</span></li>
+          <li><b>Теневой оцениватель вертикальной скорости</b><span class="d">Слияние acc + дальномер (shadow.vz) снижает скачок скорости на сантиметровых ступенях в 2,6× (9,96 → 3,79 см/с). Офлайн-исследование выявило смещение акселерометра +0,47–0,55 м/с² в висении. Готова (не залита) сборка CTL_ALT_FUSION — подача shadow.vz в контур управления.</span></li>
+          <li><b>Флип rev:10</b><span class="d">При HOV=0.74 порог maxHoverThrust=0.72 в flip.ino блокировал запуск флипа — ограничение снято. Оборот прошёл штатно, но перехват после выхода ведёт вбок; доводка флипа отложена до решения прыжков по высоте.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-11-07</span><span class="hint">очистка от ADRC</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Очистка репозитория от ADRC</b><span class="d">Удалён экспериментальный регулятор ADRC и 5 параметров CTL_ADRC* — в полёте давал раскачку 4–5 Гц. Сохранены штатные PID, FULL_HOLD и полётная логика rev:9.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-11-06</span><span class="hint">флип rev:2 → rev:9, выход доведён</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Автономный флип: от идеи до полётов</b><span class="d">Предварительный разбор → офлайн-прототип (167 сценариев, устойчивость не гарантирована) → идентификация динамики по логам (gain 214–339 рад/с², плечо крена 49 мм) → ручная проверка IMU (ошибка масштаба ~5% не подтверждена, остатки ≤1°) → реализация автомата Boost→Rotate→Brake→Level→Acquire (rev:2) и OTA → первые полётные флипы (в первой попытке столкновение с человеком, во второй улетел под стол).</span></li>
+          <li><b>Выход из флипа доведён (rev:3 → rev:9)</b><span class="d">rev:3 — раннее торможение и XY-торможение в Acquire; rev:4 — автопосадка по тайм-ауту заменена возвратом в POS_HOLD; rev:5 — усиление Boost до 0.95: просадка после оборота упала с 98 до 40–58 см («стало лучше намного»). rev:8 — усреднение IMU в окне лога (шум ×2,7 ниже); найдена и устранена перезапись цели после флипа (rev:9 — захват точки сразу в HOLD): «сейчас точка удерживалась после флипа».</span></li>
+          <li><b>rev:6 / rev:7 — гипотезы проверены и отклонены</b><span class="d">Входной cap тяги 0.60 эффекта на дугу не дал; сырые acc на 50 Гц слишком шумны для идентификации импульса — это привело к усреднению IMU в rev:8.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-11-05</span><span class="hint">LiHV 260 · перепайка FR · первый раунд борьбы с прыжками</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Лёгкая батарея</b><span class="d">Переход на 1S LiHV 260 мА·ч + BT2.0 + толстые провода: масса 75 г (прежде ~90 г), летит заметно лучше и сопротивляется толчкам; время полёта сократилось (масса и ток тогда не измерены).</span></li>
+          <li><b>Диагностика вибраций на 1 кГц (imulog)</b><span class="d">По-моторные тесты без винтов: FR-мотор передаёт вибрацию на IMU сильнее остальных. После перепайки FR RMS ускорений упал в 5–8 раз (1.43/1.96 → 0.18/0.38 м/с² на 15/30% газа); повтор подтвердил.</span></li>
+          <li><b>Первый раунд борьбы с прыжками</b><span class="d">HOV 0.72→0.58, отключение вертикального D и снижение P — оба эксперимента неудачны (откат). Видео + лог подтвердили реальное небольшое движение, а не только шум дальномера; зафиксирована резкая реакция тяги на сантиметровые ступени (медиана ±0.19).</span></li>
+        </ul>
+      </details>
+
+      <div class="month">Октябрь 2026</div>
+
+      <details>
+        <summary><span class="day">2026-10-28</span><span class="hint">навигация по командам · панель Blockly · баг взлёта</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Взлёт и посадка по командам</b><span class="d">navigate с земли — плавная раскрутка вместо рывка; land — управляемая скорость и точная посадка (глушение у пола); дизарм на земле — через 5 с без связи вместо 1 с.</span></li>
+          <li><b>Причина ухода вбок на взлёте найдена</b><span class="d">Смещение акселерометра хранилось в локальных осях и не поворачивалось при смене yaw между армами — исправлено поворотом смещения в resetPositionTracking().</span></li>
+          <li><b>Панель блочного программирования</b><span class="d">syrok-panel (Blockly + MAVLink) подключена к прошивке: защита от потери пульта при navigate/land, пересылка QGC, логи полётов пишет сама панель.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-22</span><span class="hint">автономные полёты командами · rate PID · POS_HOLD точнее</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Автономный полёт командами</b><span class="d">navigate 0.5–1.5 м: ошибка 0–2 см, перелёт вперёд ~15 см; land — касание в 2–4 см от точки. Перехват стиками работает, возвращается в исходный режим.</span></li>
+          <li><b>Настройка rate PID</b><span class="d">A/B: D 0.002 убирает 45–60% раскачки 4–5 Гц при том же удержании; P 0.06 и I 0.3 — откат (раскачка 7–8 Гц). Итог: P 0.05 / I 0.2 / D 0.002.</span></li>
+          <li><b>POS_HOLD точнее</b><span class="d">V_P −0.0045 — лучшее удержание (2,2–3,4 см); V_I −0.0015 — выигрыш ×2 по A/B на одном аккуме; интеграл позиции копится только в IZONE; масштаб потока по рулетке → FLOW_SCALE 0.0035; задержка гиро-компенсации — 15 мс.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-21</span><span class="hint">XT30 · DLPF 98 · ADRC отложен</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Питание</b><span class="d">XT30 и толстые провода к плате: под нагрузкой 3.42–3.54 В вместо ~3.1 В (потери ~0.4 В).</span></li>
+          <li><b>Оценщик</b><span class="d">DLPF 98 Гц и сохранение интегралов POS_HOLD в мёртвой зоне — уход горизонта и раскачка ушли; слияние скорости (acc + flow) — дёрганья наклона вдвое меньше.</span></li>
+          <li><b>ADRC испытан и отложен</b><span class="d">Раскачка 4–5 Гц: линейный ADRC первого порядка не учитывает задержку коллекторных моторов (~45–65 мс); PID на этих моторах лучше.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-20</span><span class="hint">MTF-02P · перекос IMU · SS34</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>MTF-02P вместо MTF-02</b><span class="d">MAVLink, видит движение на высоте. Раскачка от усиления под старый датчик исправлена; найден и исправлен перекос IMU (−2,25° по крену).</span></li>
+          <li><b>Проверка потока в руках</b><span class="d">MTF-02 на высоте недосчитывает медленное движение — отсюда снос; MTF-02P видит медленный перенос на высоте.</span></li>
+          <li><b>Диоды SS34 на моторах</b><span class="d">На 16 кГц газ висения не изменили; 32 кГц с диодами хуже 16 кГц — потери в медленном переключении ключей, а не в выбросах. Оставлено 16 кГц (до 09.11).</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-17</span><span class="hint">шум потока растёт с высотой</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Шум потока растёт с высотой</b><span class="d">На 2–2,4 м ±20–80 см/с и провалы дальномера; CTL_POS_HREF=70 (ослабление регулятора позиции с высотой) убрало раскачку. На высоте дрон всё равно плывёт от точки — дрейфует сама оценка потока.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-16</span><span class="hint">посадка отлажена · делитель напряжения</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Посадка отлажена</b><span class="d">Полёты 26–34: посадка газом в ноль с финальным глушением у пола — «норм»; тяга висения оценивается в полёте (компенсация просадки); мёртвые зоны позиции 1/1 см; найден и исправлен баг поворота команды наклона на курс (7fb5c99); потеря связи сразу после arm перестала ронять дрон.</span></li>
+          <li><b>Делитель напряжения перепаян и работает</b><span class="d">PWR_VOLT_SCALE 1.975 (сверка с мультиметром), медиана из 5 замеров против одиночных выбросов.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-15</span><span class="hint">POS_HOLD ±5 см · ШИМ 16 кГц · миксер · Махони</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>POS_HOLD держит позицию</b><span class="d">±5 см при отпущенных стиках (полёт 12); финальная фаза посадки — глушение моторов на 8 см вместо прыжков.</span></li>
+          <li><b>ШИМ 78 → 16 кГц</b><span class="d">Газ висения 0.82 → 0.75: запас тяги вырос примерно с 1,5 до 1,8 веса (на 78 кГц ключи теряли заметную часть мощности).</span></li>
+          <li><b>Миксер с приоритетами</b><span class="d">Как в PX4: крен/тангаж сохраняются за счёт снижения газа — раньше на полном газу терялся контроль наклона.</span></li>
+          <li><b>Оценка наклона и скорость</b><span class="d">Коррекция наклона акселерометром в полёте (Махони) — дрейф крена устранён; скорость «как в INAV» (acc + коррекция потоком). Лог полёта на ПК (record.py) и лог по Wi-Fi.</span></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span class="day">2026-10-14</span><span class="hint">11 коммитов прошивки · выводы из логов</span><span class="chev"></span></summary>
+        <ul>
+          <li><b>Первый каскад правок прошивки (11 коммитов)</b><span class="d">Баг PID-интеграла (копился без ограничения), линеаризация газа (CTL_THR_LIN), I yaw и его предел, мёртвая зона yaw, автопосадка по критерию «перестал снижаться», посадка стиком газа вниз, лог стиков/высоты, баг памяти консоли MAVLink.</span></li>
+          <li><b>Выводы из логов</b><span class="d">Запаса тяги почти нет (газ 0.90 в STAB), прыжки POS_HOLD — нехватка тяги + накопленный интеграл; посадка прыгает 2↔25 см; модель регулятора высоты (altsim) предсказала качели и дала рецепт V_I 0.01.</span></li>
+        </ul>
+      </details>
+
     </div>
+  </section>
 
-    <div class="mile done">
-      <div class="when"><b>05.11.2026</b>материал</div>
-      <div class="axis"><div class="node">5</div></div>
-      <div class="body"><div class="t">Материал рамы: полипропилен</div>
-      <div class="d">Обзор PP-филамента: PP 0,90 г/см³ — самый лёгкий печатный пластик, гнётся, гасит вибрации. В РФ палитра только белый/натуральный/чёрный — цвет решается канопи из PETG. Идея двухпозиционной камеры (вперёд ↔ вниз) на приводе.</div>
-      <ul class="commits"><li><span class="sha">7aa3ced</span> Обзор PP-филамента · <span class="sha">6afd42d</span> идея двухпозиционной камеры</li></ul></div>
+  <section class="view" id="resheniya">
+    <h2>Архитектурные решения</h2>
+    <div class="cards">
+      <div class="card"><b>Прошивка — собственный форк flix (syrok_lite)</b><div class="why">Свои optical flow (MTF-02), POS_HOLD, автопосадка и навигация, микшер с приоритетами, коррекция наклона, исправления защит и переходов режимов. Апстрим flix мониторится кроном ежечасно — полезное отбирается в заметку «flix — апстрим-коммиты и что внедрять».</div></div>
+      <div class="card"><b>Автономный образовательный дрон, не FPV</b><div class="why">Камера — обзор с борта и vision-задачи, не видеотракт. Вся терминология проекта выверена под это (07.11.2026).</div></div>
+      <div class="card"><b>Электроника Лайта: ESP32-S3 SuperMini</b><div class="why">IMU на SPI (не I2C — циклы 1–8 кГц и джиттер критичны), MTF-02 и ELRS на UART, делитель АКБ на ADC1 (GPIO9 — при Wi-Fi жив только ADC1), ToF-датчик — опция на I2C. INA226 на борту нет — измерение тока только на стенде. Питание логики 3,3 В: buck-boost по умолчанию, для Лайта рассматривается LDO с жёсткой автопосадкой при 3,7 В под нагрузкой + LiHV.</div></div>
+      <div class="card"><b>Моторы: 8520 → 615 для Лайта</b><div class="why">Сейчас 8520 (~32 г тяги на мотор в сборке 75 г). Для Лайта (≤45 г, цель ≤35 г) — высокооборотные 615 ~70k rpm (~17 г тяги, класс ESP-FLY), 716 как альтернатива. Время полёта ~ масса^1,5: 75→40 г даёт ×2,5–2,9.</div></div>
+      <div class="card"><b>Силовой каскад: N-MOSFET + Шоттки</b><div class="why">Сейчас 100N03A; SS34 обязателен (body diode). SI2300 допустим для 615, PMV16XN/IRLML6244 предпочтительнее. Причина потери тяги не подтверждена осциллографом — сравнение ШИМ 16/32/78 кГц и диоды на тензостенде.</div></div>
+      <div class="card"><b>Рама: PP + PETG-канопи</b><div class="why">PP (LEGA RUBBER) — 0,90 г/см³, гнётся, гасит вибрации (как у Air65); цвет — канопи из светло-голубого PETG. Рама v0.2 = 6,7 г, путь дальше — 3 г Air65-класса на меньшей базе.</div></div>
+      <div class="card"><b>Стендовая программа</b><div class="why">Тензодатчик YZC-133 + HX711 (30–55 г на мотор); гимбал на привязи (1 DoF → 3 DoF → свободный полёт): PID-настройка и диагностика без полётов; стендовый дрон с раздельным измерением тока по моторам (INA226/шунты) — честное сравнение 8520 vs 615 vs 716 и поиск «слабого» мотора. POS_HOLD по optical flow на привязи не тестируется (yaw «двигает» пол для флоу).</div></div>
     </div>
+  </section>
 
-    <div class="mile done">
-      <div class="when"><b>06.11.2026</b>референсы</div>
-      <div class="axis"><div class="node">6</div></div>
-      <div class="body"><div class="t">Референсы: Tello и ESP32-дроны</div>
-      <div class="d">Разбор DJI Tello (4 версии, EDU — кандидат на покупку; UDP SDK 8889/8890/11111 как образец API для образовательного дрона). Запущен регулярный мониторинг живых проектов дронов на ESP32 (SparrowFlight и др.) — что перенять в Сырок.</div>
-      <ul class="commits"><li><span class="sha">34607e3</span> Tello — версии и отличия · <span class="sha">bee25bc</span> накопитель ESP32-дронов</li></ul></div>
+  <section class="view" id="voprosy">
+    <h2>Открытые вопросы</h2>
+    <div class="cards">
+      <div class="card"><b>Вертикальные прыжки POS_HOLD ~1.7 Гц</b><div class="why">Текущая задача (05–09.11). Установлено: ступень тяги 0.132 на каждом сантиметре создаёт связка altZ.D → altV.P на пилообразной скорости от 1-см квантования дальномера. Теневой оцениватель скорости снижает скачок в 2,6×; готова (не залита) сборка CTL_ALT_FUSION — подача shadow.vz в контур.</div></div>
+      <div class="card"><b>POS_HOLD уходит по дуге после поворота</b><div class="why">Гипотеза: рычаг MTF-02 от центра + вихрь от пропов. Лечение: компенсация рычага + notch-фильтр по измеренному спектру вибраций.</div></div>
+      <div class="card"><b>Потеря тяги</b><div class="why">Обратные диоды на моторах не подтверждены осциллографом; сравнение ШИМ 16/32/78 кГц запланировано на тензостенде.</div></div>
     </div>
-
-    <div class="mile done">
-      <div class="when"><b>07.11.2026</b>замеры</div>
-      <div class="axis"><div class="node">7</div></div>
-      <div class="body"><div class="t">Позиционирование и первые честные замеры</div>
-      <div class="d">Сырок — <b>автономный образовательный дрон, не FPV</b>. Идея pusher-конфигурации (моторы вниз). Замеры Никитки: полётная масса ~75 г, газ висения 0.58.</div>
-      <ul class="commits"><li><span class="sha">192ac2c</span> «не FPV» везде · <span class="sha">26e364d</span> pusher-идея · <span class="sha">31a2d8d</span> масса 75 г</li></ul></div>
-    </div>
-
-    <div class="mile done">
-      <div class="when"><b>08.11.2026</b>Лайт</div>
-      <div class="axis"><div class="node">8</div></div>
-      <div class="body"><div class="t">Полная тяга и поворот к «Сырок-Лайт»</div>
-      <div class="d">Тяга ~129 г → TWR ≈ 1,7. Кандидат моторов Лайта — высокооборотные 615 (класс ESP-FLY: ~17 г тяги, 25-г дрон). MOSFET: SI2300 допустим для 615. Собрана смета закупок. Стендовая программа: тензодатчик YZC-133+HX711, гимбал на привязи, идея стендового дрона с раздельным измерением тока по моторам.</div>
-      <ul class="commits"><li><span class="sha">441461c</span> TWR 1,7 · <span class="sha">296b2af</span> 615-моторы · <span class="sha">42b334c</span> SI2300 · <span class="sha">7019372</span> стендовый дрон с токами</li></ul></div>
-    </div>
-
-    <div class="mile cur">
-      <div class="when"><b>10.11.2026</b>сейчас</div>
-      <div class="axis"><div class="node">→</div></div>
-      <div class="body"><div class="t">Рама v0.2 напечатана — почти вдвое легче <span class="tag now">мы здесь</span></div>
-      <div class="d">Рама v0.2 весит <b>6,7 г</b> против 13 г у v0.1 (−48%). Полную массу в сборе с новой рамой и моторами props-in ещё не перевешивали. Параллельно — доводка стабильного висения: готова (не залита) сборка с переключаемой вертикальной обратной связью CTL_ALT_FUSION, ждёт полётной проверки на обновлённой раме.</div>
-      <ul class="commits"><li><span class="sha">f5a50de</span> рама v0.2 6,7 г · <span class="sha">97fcfd2</span> v0.1 13 г · <span class="sha">ea25ab8</span> flix-мониторинг в vault</li></ul></div>
-    </div>
-
-  </div>
-
-  <h2>Текущее железо</h2>
-  <div class="hw">
-    <div class="card"><b>Силовая установка</b><div class="why">Моторы 8520 coreless, пропеллеры 65 мм, диоды SS34 на моторах. ШИМ 32 кГц / 10 бит — звук и плавность тяги лучше, чем на 98 кГц/9 бит. Схема вращения — props-in (MOT_SPIN_OUT=0, с 09.11).</div></div>
-    <div class="card"><b>Батарея и масса</b><div class="why">1S LiHV 260 мА·ч, разъём BT2.0, толстые провода питания (с 05.11). Полётная масса с аккумом — 75 г (прежде ~90 г со старой батареей), газ висения 0.58–0.59. Аккум 7 г, по центру в нижнем отсеке, без фиксатора. Испытание 550 мА·ч — впереди.</div></div>
-    <div class="card"><b>Рама</b><div class="why">v0.2 напечатана 10.11 — <b>6,7 г</b> (v0.1 — 13 г). База между центрами валов: 98 мм слева–справа, 67 мм спереди–сзади (замер 06.11). Полную массу в сборе с новой рамой и заменёнными моторами ещё не перевешивали.</div></div>
-    <div class="card"><b>Датчики</b><div class="why">IMU MPU6050 по I2C (DLPF 98 Гц); optical flow + дальномер MTF-02P на Serial2 — MAVLink с 20.10, старый MSP тоже поддерживается. Измерение батареи: делитель 10k/10k на IO32, PWR_VOLT_SCALE 1.975; в полётах 3.45–3.77 В под нагрузкой.</div></div>
-    <div class="card"><b>Управление и связь</b><div class="why">BetaFPV LiteRadio 3 по USB как джойстик в QGroundControl (пульт подключать выключенным, иначе оси не работают). Kill switch — кнопки QGC_SW1_LO/HI (6/7). Wi-Fi в режиме клиента — дрон в локальной сети, прошивка по OTA; USB на ПК — COM15. SBUS не используется.</div></div>
-  </div>
-
-  <h2>Архитектурные решения</h2>
-  <div class="cards">
-    <div class="card"><b>Прошивка — собственный форк flix (syrok_lite)</b><div class="why">Свои optical flow (MTF-02), POS_HOLD, автопосадка и навигация, микшер с приоритетами, коррекция наклона, исправления защит и переходов режимов. Апстрим flix мониторится кроном ежечасно — полезное отбирается в заметку «flix — апстрим-коммиты и что внедрять».</div></div>
-    <div class="card"><b>Автономный образовательный дрон, не FPV</b><div class="why">Камера — обзор с борта и vision-задачи, не видеотракт. Вся терминология проекта выверена под это (07.11.2026).</div></div>
-    <div class="card"><b>Электроника Лайта: ESP32-S3 SuperMini</b><div class="why">IMU на SPI (не I2C — циклы 1–8 кГц и джиттер критичны), MTF-02 и ELRS на UART, делитель АКБ на ADC1 (GPIO9 — при Wi-Fi жив только ADC1), ToF-датчик — опция на I2C. INA226 на борту нет — измерение тока только на стенде. Питание логики 3,3 В: buck-boost по умолчанию, для Лайта рассматривается LDO с жёсткой автопосадкой при 3,7 В под нагрузкой + LiHV.</div></div>
-    <div class="card"><b>Моторы: 8520 → 615 для Лайта</b><div class="why">Сейчас 8520 (~32 г тяги на мотор в сборке 75 г). Для Лайта (≤45 г, цель ≤35 г) — высокооборотные 615 ~70k rpm (~17 г тяги, класс ESP-FLY), 716 как альтернатива. Время полёта ~ масса^1,5: 75→40 г даёт ×2,5–2,9.</div></div>
-    <div class="card"><b>Силовой каскад: N-MOSFET + Шоттки</b><div class="why">Сейчас 100N03A; SS34 обязателен (body diode). SI2300 допустим для 615, PMV16XN/IRLML6244 предпочтительнее. Причина потери тяги не подтверждена осциллографом — сравнение ШИМ 16/32/78 кГц и диоды на тензостенде.</div></div>
-    <div class="card"><b>Рама: PP + PETG-канопи</b><div class="why">PP (LEGA RUBBER) — 0,90 г/см³, гнётся, гасит вибрации (как у Air65); цвет — канопи из светло-голубого PETG. Рама v0.2 = 6,7 г, путь дальше — 3 г Air65-класса на меньшей базе.</div></div>
-    <div class="card"><b>Стендовая программа</b><div class="why">Тензодатчик YZC-133 + HX711 (30–55 г на мотор); гимбал на привязи (1 DoF → 3 DoF → свободный полёт): PID-настройка и диагностика без полётов; стендовый дрон с раздельным измерением тока по моторам (INA226/шунты) — честное сравнение 8520 vs 615 vs 716 и поиск «слабого» мотора. POS_HOLD по optical flow на привязи не тестируется (yaw «двигает» пол для флоу).</div></div>
-  </div>
-
-  <h2>Открытые вопросы</h2>
-  <div class="cards">
-    <div class="card"><b>Вертикальные прыжки POS_HOLD ~1.7 Гц</b><div class="why">Текущая задача (05–09.11). Установлено: ступень тяги 0.132 на каждом сантиметре создаёт связка altZ.D → altV.P на пилообразной скорости от 1-см квантования дальномера. Теневой оцениватель скорости снижает скачок в 2,6×; готова (не залита) сборка CTL_ALT_FUSION — подача shadow.vz в контур.</div></div>
-    <div class="card"><b>POS_HOLD уходит по дуге после поворота</b><div class="why">Гипотеза: рычаг MTF-02 от центра + вихрь от пропов. Лечение: компенсация рычага + notch-фильтр по измеренному спектру вибраций.</div></div>
-    <div class="card"><b>Потеря тяги</b><div class="why">Обратные диоды на моторах не подтверждены осциллографом; сравнение ШИМ 16/32/78 кГц запланировано на тензостенде.</div></div>
-  </div>
-
-  <h2>Журнал работ — по датам</h2>
-  <div class="log">
-
-    <div class="day">2026-11-10</div>
-    <ul>
-      <li><b>Напечатана облегчённая рама 6,7 г</b><span class="d">Новая рама v0.2. Полную массу в сборе с новой рамой и недавно заменёнными моторами props-in ещё не перевешивали. Заливка подготовленной сборки с переключаемой вертикальной обратной связью (CTL_ALT_FUSION) отложена до готовности к полётной проверке на обновлённой раме.</span></li>
-    </ul>
-
-    <div class="day">2026-11-09</div>
-    <ul>
-      <li><b>Моторы переведены на props-in</b><span class="d">Замена моторов на партию с вращением внутрь. С оставшимся MOT_SPIN_OUT=1 (наружу) — мгновенная раскрутка по курсу до +465°/с; в прошивку добавлен параметр MOT_SPIN_OUT (0 — внутрь, 1 — наружу), схема исправлена, раскрутка ушла. Газ висения на новой паре: 0.587–0.594 → HOV=0.59.</span></li>
-      <li><b>POS_HOLD на новых моторах: база тяги совпала, прыжки остались</b><span class="d">Медиана тяги висения 0.592 при базе 0.590, дрейфа по высоте нет, но вертикальная раскачка ~1.7 Гц сохраняется (СКО высоты 2,75 см, размах p05–p95 9 см).</span></li>
-      <li><b>Диагностика вертикального контура</b><span class="d">LOG_PROFILE=1: впервые записаны все 6 слагаемых каскада высоты. На каждом сантиметре дальномера связка altZ.D → altV.P даёт мгновенную ступень тяги 0.132. Тест CTL_ALT_Z_D 0.18→0.09: импульс тяги −36%, физические прыжки не исчезли.</span></li>
-      <li><b>ШИМ: выбраны 32 кГц / 10 бит</b><span class="d">98 кГц / 9 бит — газ висения вырос до 0.74 и звук моторов хуже; 32 кГц / 10 бит — тяга висения 0.635–0.642, звук и плавность заметно лучше. Оставлено 32 кГц / 10 бит.</span></li>
-      <li><b>Теневой оцениватель вертикальной скорости</b><span class="d">Слияние acc + дальномер (shadow.vz) снижает скачок скорости на сантиметровых ступенях в 2,6× (9,96 → 3,79 см/с). Офлайн-исследование выявило смещение акселерометра +0,47–0,55 м/с² в висении. Готова (не залита) сборка CTL_ALT_FUSION — подача shadow.vz в контур управления.</span></li>
-      <li><b>Флип rev:10</b><span class="d">При HOV=0.74 порог maxHoverThrust=0.72 в flip.ino блокировал запуск флипа — ограничение снято. Оборот прошёл штатно, но перехват после выхода ведёт вбок; доводка флипа отложена до решения прыжков по высоте.</span></li>
-    </ul>
-
-    <div class="day">2026-11-07</div>
-    <ul>
-      <li><b>Очистка репозитория от ADRC</b><span class="d">Удалён экспериментальный регулятор ADRC и 5 параметров CTL_ADRC* — в полёте давал раскачку 4–5 Гц. Сохранены штатные PID, FULL_HOLD и полётная логика rev:9.</span></li>
-    </ul>
-
-    <div class="day">2026-11-06</div>
-    <ul>
-      <li><b>Автономный флип: от идеи до полётов</b><span class="d">Предварительный разбор → офлайн-прототип (167 сценариев, устойчивость не гарантирована) → идентификация динамики по логам (gain 214–339 рад/с², плечо крена 49 мм) → ручная проверка IMU (ошибка масштаба ~5% не подтверждена, остатки ≤1°) → реализация автомата Boost→Rotate→Brake→Level→Acquire (rev:2) и OTA → первые полётные флипы (в первой попытке столкновение с человеком, во второй улетел под стол).</span></li>
-      <li><b>Выход из флипа доведён (rev:3 → rev:9)</b><span class="d">rev:3 — раннее торможение и XY-торможение в Acquire; rev:4 — автопосадка по тайм-ауту заменена возвратом в POS_HOLD; rev:5 — усиление Boost до 0.95: просадка после оборота упала с 98 до 40–58 см («стало лучше намного»). rev:8 — усреднение IMU в окне лога (шум ×2,7 ниже); найдена и устранена перезапись цели после флипа (rev:9 — захват точки сразу в HOLD): «сейчас точка удерживалась после флипа».</span></li>
-      <li><b>rev:6 / rev:7 — гипотезы проверены и отклонены</b><span class="d">Входной cap тяги 0.60 эффекта на дугу не дал; сырые acc на 50 Гц слишком шумны для идентификации импульса — это привело к усреднению IMU в rev:8.</span></li>
-    </ul>
-
-    <div class="day">2026-11-05</div>
-    <ul>
-      <li><b>Лёгкая батарея</b><span class="d">Переход на 1S LiHV 260 мА·ч + BT2.0 + толстые провода: масса 75 г (прежде ~90 г), летит заметно лучше и сопротивляется толчкам; время полёта сократилось (масса и ток тогда не измерены).</span></li>
-      <li><b>Диагностика вибраций на 1 кГц (imulog)</b><span class="d">По-моторные тесты без винтов: FR-мотор передаёт вибрацию на IMU сильнее остальных. После перепайки FR RMS ускорений упал в 5–8 раз (1.43/1.96 → 0.18/0.38 м/с² на 15/30% газа); повтор подтвердил.</span></li>
-      <li><b>Первый раунд борьбы с прыжками</b><span class="d">HOV 0.72→0.58, отключение вертикального D и снижение P — оба эксперимента неудачны (откат). Видео + лог подтвердили реальное небольшое движение, а не только шум дальномера; зафиксирована резкая реакция тяги на сантиметровые ступени (медиана ±0.19).</span></li>
-    </ul>
-
-    <div class="day">2026-10-28</div>
-    <ul>
-      <li><b>Взлёт и посадка по командам</b><span class="d">navigate с земли — плавная раскрутка вместо рывка; land — управляемая скорость и точная посадка (глушение у пола); дизарм на земле — через 5 с без связи вместо 1 с.</span></li>
-      <li><b>Причина ухода вбок на взлёте найдена</b><span class="d">Смещение акселерометра хранилось в локальных осях и не поворачивалось при смене yaw между армами — исправлено поворотом смещения в resetPositionTracking().</span></li>
-      <li><b>Панель блочного программирования</b><span class="d">syrok-panel (Blockly + MAVLink) подключена к прошивке: защита от потери пульта при navigate/land, пересылка QGC, логи полётов пишет сама панель.</span></li>
-    </ul>
-
-    <div class="day">2026-10-22</div>
-    <ul>
-      <li><b>Автономный полёт командами</b><span class="d">navigate 0.5–1.5 м: ошибка 0–2 см, перелёт вперёд ~15 см; land — касание в 2–4 см от точки. Перехват стиками работает, возвращается в исходный режим.</span></li>
-      <li><b>Настройка rate PID</b><span class="d">A/B: D 0.002 убирает 45–60% раскачки 4–5 Гц при том же удержании; P 0.06 и I 0.3 — откат (раскачка 7–8 Гц). Итог: P 0.05 / I 0.2 / D 0.002.</span></li>
-      <li><b>POS_HOLD точнее</b><span class="d">V_P −0.0045 — лучшее удержание (2,2–3,4 см); V_I −0.0015 — выигрыш ×2 по A/B на одном аккуме; интеграл позиции копится только в IZONE; масштаб потока по рулетке → FLOW_SCALE 0.0035; задержка гиро-компенсации — 15 мс.</span></li>
-    </ul>
-
-    <div class="day">2026-10-21</div>
-    <ul>
-      <li><b>Питание</b><span class="d">XT30 и толстые провода к плате: под нагрузкой 3.42–3.54 В вместо ~3.1 В (потери ~0.4 В).</span></li>
-      <li><b>Оценщик</b><span class="d">DLPF 98 Гц и сохранение интегралов POS_HOLD в мёртвой зоне — уход горизонта и раскачка ушли; слияние скорости (acc + flow) — дёрганья наклона вдвое меньше.</span></li>
-      <li><b>ADRC испытан и отложен</b><span class="d">Раскачка 4–5 Гц: линейный ADRC первого порядка не учитывает задержку коллекторных моторов (~45–65 мс); PID на этих моторах лучше.</span></li>
-    </ul>
-
-    <div class="day">2026-10-20</div>
-    <ul>
-      <li><b>MTF-02P вместо MTF-02</b><span class="d">MAVLink, видит движение на высоте. Раскачка от усиления под старый датчик исправлена; найден и исправлен перекос IMU (−2,25° по крену).</span></li>
-      <li><b>Проверка потока в руках</b><span class="d">MTF-02 на высоте недосчитывает медленное движение — отсюда снос; MTF-02P видит медленный перенос на высоте.</span></li>
-      <li><b>Диоды SS34 на моторах</b><span class="d">На 16 кГц газ висения не изменили; 32 кГц с диодами хуже 16 кГц — потери в медленном переключении ключей, а не в выбросах. Оставлено 16 кГц (до 09.11).</span></li>
-    </ul>
-
-    <div class="day">2026-10-17</div>
-    <ul>
-      <li><b>Шум потока растёт с высотой</b><span class="d">На 2–2,4 м ±20–80 см/с и провалы дальномера; CTL_POS_HREF=70 (ослабление регулятора позиции с высотой) убрало раскачку. На высоте дрон всё равно плывёт от точки — дрейфует сама оценка потока.</span></li>
-    </ul>
-
-    <div class="day">2026-10-16</div>
-    <ul>
-      <li><b>Посадка отлажена</b><span class="d">Полёты 26–34: посадка газом в ноль с финальным глушением у пола — «норм»; тяга висения оценивается в полёте (компенсация просадки); мёртвые зоны позиции 1/1 см; найден и исправлен баг поворота команды наклона на курс (7fb5c99); потеря связи сразу после arm перестала ронять дрон.</span></li>
-      <li><b>Делитель напряжения перепаян и работает</b><span class="d">PWR_VOLT_SCALE 1.975 (сверка с мультиметром), медиана из 5 замеров против одиночных выбросов.</span></li>
-    </ul>
-
-    <div class="day">2026-10-15</div>
-    <ul>
-      <li><b>POS_HOLD держит позицию</b><span class="d">±5 см при отпущенных стиках (полёт 12); финальная фаза посадки — глушение моторов на 8 см вместо прыжков.</span></li>
-      <li><b>ШИМ 78 → 16 кГц</b><span class="d">Газ висения 0.82 → 0.75: запас тяги вырос примерно с 1,5 до 1,8 веса (на 78 кГц ключи теряли заметную часть мощности).</span></li>
-      <li><b>Миксер с приоритетами</b><span class="d">Как в PX4: крен/тангаж сохраняются за счёт снижения газа — раньше на полном газу терялся контроль наклона.</span></li>
-      <li><b>Оценка наклона и скорость</b><span class="d">Коррекция наклона акселерометром в полёте (Махони) — дрейф крена устранён; скорость «как в INAV» (acc + коррекция потоком). Лог полёта на ПК (record.py) и лог по Wi-Fi.</span></li>
-    </ul>
-
-    <div class="day">2026-10-14</div>
-    <ul>
-      <li><b>Первый каскад правок прошивки (11 коммитов)</b><span class="d">Баг PID-интеграла (копился без ограничения), линеаризация газа (CTL_THR_LIN), I yaw и его предел, мёртвая зона yaw, автопосадка по критерию «перестал снижаться», посадка стиком газа вниз, лог стиков/высоты, баг памяти консоли MAVLink.</span></li>
-      <li><b>Выводы из логов</b><span class="d">Запаса тяги почти нет (газ 0.90 в STAB), прыжки POS_HOLD — нехватка тяги + накопленный интеграл; посадка прыгает 2↔25 см; модель регулятора высоты (altsim) предсказала качели и дала рецепт V_I 0.01.</span></li>
-    </ul>
-
-  </div>
+  </section>
 
   <div class="foot">
     <span><a href="roadmap.html">Роадмапы всех проектов</a></span>
@@ -265,4 +332,18 @@ a{color:var(--accent)}
     <span>обновлено 10.11.2026</span>
   </div>
 </div>
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var views=[].slice.call(document.querySelectorAll('.view'));
+  function show(id,push){
+    views.forEach(function(v){v.classList.toggle('on',v.id===id)});
+    tabs.forEach(function(t){t.classList.toggle('on',t.dataset.id===id)});
+    if(push){try{history.replaceState(null,'','#'+id)}catch(e){}}
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.id,true)})});
+  var h=(location.hash||'').replace('#','');
+  show(views.some(function(v){return v.id===h})?h:'overview',false);
+})();
+</script>
 </body></html>
