@@ -35,6 +35,11 @@ main{padding:14px 12px 30px}
 .dl{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--line);background:var(--panel2)}
 .dl.over{color:var(--warn);border-color:var(--warn)}
 .err{color:var(--warn)}
+/* Разделители дней в колонке «Завершённые» (сортировка по completed_at). */
+.daysep{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin:9px 0 5px;padding-top:7px;border-top:1px solid var(--line)}
+.daysep:first-child{margin-top:0;padding-top:0;border-top:none}
+.daysep span{float:right;color:var(--text)}
+.daysep.fresh{color:var(--accent)}
 footer{padding:8px 16px 18px;font-size:12px;color:var(--dim)}
 a{color:var(--blue);text-decoration:none}
 #overlay{position:fixed;inset:0;background:rgba(5,10,12,.72);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;z-index:5}
@@ -114,6 +119,50 @@ const who=a=>a==='lira'?'Лира':(a==='default'?'Лира (ночь)':(a?a:'Б
 const asgList=a=>(a||'').split(',').map(s=>s.trim()).filter(Boolean);
 /* Завершённая колонка скрыта по умолчанию — тоггл «Завершённые (N)». */
 let showDone=localStorage.getItem('kbShowDone')==='1';
+/* Закрытые карточки: свежие сверху (completed_at desc) + разделители
+   «Сегодня / Вчера / Раньше». Без completed_at — в конец. Хелперы глобальные. */
+const DAY_ORDER=[{key:'today',label:'Сегодня'},{key:'yesterday',label:'Вчера'},{key:'earlier',label:'Раньше'},{key:'none',label:'Без даты закрытия'}];
+const sameDay=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+function dayKey(ts){
+  if(!ts)return'none';
+  const d=new Date(ts*1000);
+  if(sameDay(d,new Date()))return'today';
+  const y=new Date();y.setDate(y.getDate()-1);
+  return sameDay(d,y)?'yesterday':'earlier';
+}
+function closedLabel(ts){
+  if(!ts)return'';
+  const d=new Date(ts*1000);const p=n=>String(n).padStart(2,'0');
+  const hm=p(d.getHours())+':'+p(d.getMinutes());
+  return dayKey(ts)==='today'?'закрыта '+hm:'закрыта '+p(d.getDate())+'.'+p(d.getMonth()+1)+' '+hm;
+}
+function cardHtml(t,b,c){
+  window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
+  const closed=(c.status==='done'||c.status==='archived');
+  return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
+    '<div class="meta">'+(t.assignee&&!(asgList(t.assignee).length===1&&asgList(t.assignee)[0]==='default')?asgList(t.assignee).map(a=>'<span title="исполнитель">'+esc(who(a))+'</span>').join(' '):'')+
+    dlBadge(t)+
+    (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
+    (closed?(t.completed_at?'<span title="когда закрыли карточку">'+esc(closedLabel(t.completed_at))+'</span>':''):(t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':''))+
+    '</div></div>';
+}
+function columnHtml(b,c){
+  let inner;
+  if(c.status==='done'||c.status==='archived'){
+    const sorted=c.tasks.slice().sort((x,y)=>(y.completed_at||0)-(x.completed_at||0));
+    const buckets={};
+    sorted.forEach(t=>{const k=dayKey(t.completed_at);(buckets[k]=buckets[k]||[]).push(t);});
+    inner=DAY_ORDER.map(g=>{
+      const arr=buckets[g.key]||[];
+      if(!arr.length)return'';
+      return '<div class="daysep'+(g.key==='today'?' fresh':'')+'" data-day="'+g.key+'">'+esc(g.label)+'<span>'+arr.length+'</span></div>'+
+        arr.map(t=>cardHtml(t,b,c)).join('');
+    }).join('');
+  }else{
+    inner=c.tasks.map(t=>cardHtml(t,b,c)).join('');
+  }
+  return '<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+(inner||'<div class="dim">—</div>')+'</div>';
+}
 const dlBadge=t=>{
   if(!t.deadline)return'';
   const open=t.status!=='done'&&t.status!=='archived';
@@ -158,14 +207,7 @@ function render(){
   window.__tasks={};
   const html=boards.map(b=>{
     if(b.error)return '<section class="board"><h2>'+esc(b.name)+'</h2><div class="err">'+esc(b.error)+'</div></section>';
-    const cols=b.columns.filter(c=>showDone||c.status!=='done').map(c=>'<div class="col"><h3>'+esc(c.title)+'<span>'+c.tasks.length+'</span></h3>'+
-      c.tasks.map(t=>{window.__tasks[t.id]=t;t._board=b.name;t._status=c.title;
-        return '<div class="card click" data-id="'+esc(t.id)+'" title="нажмите — подробнее">'+esc(t.title)+
-        '<div class="meta">'+(t.assignee&&!(asgList(t.assignee).length===1&&asgList(t.assignee)[0]==='default')?asgList(t.assignee).map(a=>'<span title="исполнитель">'+esc(who(a))+'</span>').join(' '):'')+
-        dlBadge(t)+
-        (t.priority?'<span title="приоритет: чем меньше число, тем важнее">P'+esc(t.priority)+'</span>':'')+
-        (t.completed_at?'<span>'+esc(fmt(t.completed_at))+'</span>':'')+'</div></div>'}).join('')+
-      (c.tasks.length?'':'<div class="dim">—</div>')+'</div>').join('');
+    const cols=b.columns.filter(c=>showDone||c.status!=='done').map(c=>columnHtml(b,c)).join('');
     const visN=b.columns.filter(c=>showDone||c.status!=='done').reduce((n,c)=>n+c.tasks.length,0);
     return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+visN+'</span></h2><div class="cols">'+cols+'</div></section>';
   }).join('');
