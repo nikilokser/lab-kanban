@@ -65,12 +65,13 @@ pre.taskbody{white-space:pre-wrap;background:var(--panel2);border:1px solid var(
 #taskbox b{color:var(--accent)}
 #filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px 0}
 #filters select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 8px;font:inherit;font-size:13px;max-width:45vw}
+#filters input[type=search]{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 8px;font:inherit;font-size:13px;min-width:160px}
 #filters button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:12px}
 </style>
 </head>
 <body>
 <header><h1>Канбан лабы</h1><div class="dim" id="updated">загрузка…</div><nav class="pnav"><a href="lira.html">Резюме Лиры</a><a href="history.html">Хронология Сырка</a><a href="status.html">Статус</a><a href="links.html">Все ссылки</a></nav><button id="helpbtn" title="Что здесь означает" aria-label="Справка">?</button></header>
-<div id="filters"><select id="f-board"><option value="">Все проекты</option></select><select id="f-assignee"><option value="">Все исполнители</option></select><button id="f-done" title="показать/скрыть завершённые задачи">Завершённые</button><button id="f-reset" hidden>Сброс</button></div>
+<div id="filters"><select id="f-board"><option value="">Все проекты</option></select><select id="f-assignee"><option value="">Все исполнители</option></select><input id="f-search" type="search" placeholder="Поиск в заголовке или описании" title="подстрока в заголовке или описании карточки"><button id="f-done" title="показать/скрыть завершённые задачи">Завершённые</button><button id="f-reset" hidden>Сброс</button></div>
 <main id="content"><div class="dim">Загрузка…</div></main>
 <footer>Зеркало канбан-досок лаборатории · только чтение · обновляется автоматически</footer>
 <div id="gate"><div id="gatebox">
