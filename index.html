@@ -142,12 +142,15 @@ function render(){
   const fb=document.getElementById('f-board').value;
   const faraw=document.getElementById('f-assignee').value;
   const fa=faraw==='__nobody'?'':faraw;
+  const fq=document.getElementById('f-search').value.trim().toLowerCase();
   fillSelect('f-board',DATA.boards.filter(b=>!b.error).map(b=>[b.slug,b.name]),'Все проекты');
   fillSelect('f-assignee',uniqueAssignees(),'Все исполнители');
-  document.getElementById('f-reset').hidden=!fb&&!faraw;
+  document.getElementById('f-reset').hidden=!fb&&!faraw&&!fq;
   let boards=DATA.boards;
   if(fb)boards=boards.filter(b=>b.slug===fb);
   if(faraw)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>fa?asgList(t.assignee).includes(fa):!asgList(t.assignee).length)})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
+  /* Свободный поиск: подстрока в заголовке или описании, поверх остальных фильтров. */
+  if(fq)boards=boards.map(b=>Object.assign({},b,{columns:(b.columns||[]).map(c=>({st:c.status,title:c.title,tasks:c.tasks.filter(t=>!t.error&&((t.title||'')+'\n'+(t.body||'')).toLowerCase().includes(fq))})).filter(c=>c.tasks.length)})).filter(b=>(b.columns||[]).length);
   const doneCount=boards.reduce((n,b)=>n+(b.columns||[]).filter(c=>c.status==='done').reduce((m,c)=>m+c.tasks.length,0),0);
   const db=document.getElementById('f-done');
   db.textContent='Завершённые ('+doneCount+')';
@@ -166,7 +169,7 @@ function render(){
     const visN=b.columns.filter(c=>showDone||c.status!=='done').reduce((n,c)=>n+c.tasks.length,0);
     return '<section class="board"><h2>'+esc(b.name)+' <span class="dim">· '+visN+'</span></h2><div class="cols">'+cols+'</div></section>';
   }).join('');
-  document.getElementById('content').innerHTML=html||(fa?'<div class="dim">У этого исполнителя сейчас нет задач</div>':'<div class="dim">досок нет</div>');
+  document.getElementById('content').innerHTML=html||(fq?'<div class="dim">Ничего не найдено по поиску</div>':(fa?'<div class="dim">У этого исполнителя сейчас нет задач</div>':'<div class="dim">досок нет</div>'));
 }
 function autoPickUser(){
   if(window.__userPicked)return;
@@ -243,7 +246,7 @@ document.getElementById('content').addEventListener('click',e=>{
 document.getElementById('f-board').addEventListener('change',()=>{window.__userPicked=true;render()});
 document.getElementById('f-assignee').addEventListener('change',()=>{window.__userPicked=true;render()});
 document.getElementById('f-done').addEventListener('click',()=>{showDone=!showDone;localStorage.setItem('kbShowDone',showDone?'1':'0');render()});
-document.getElementById('f-reset').addEventListener('click',()=>{document.getElementById('f-board').value='';document.getElementById('f-assignee').value='';render()});
+document.getElementById('f-reset').addEventListener('click',()=>{document.getElementById('f-board').value='';document.getElementById('f-assignee').value='';document.getElementById('f-search').value='';render()});
 document.getElementById('taskoverlay').addEventListener('click',e=>{if(e.target.id==='taskoverlay')closeTask()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTask()});
 if(window.Telegram&&window.Telegram.WebApp){try{window.Telegram.WebApp.ready();window.Telegram.WebApp.expand()}catch(e){}}
